@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'allocationapp'
+    'omp'
 ]
 
 MIDDLEWARE_CLASSES = [

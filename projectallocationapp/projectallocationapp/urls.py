@@ -19,7 +19,7 @@ from django.conf.urls import include
 from omp import views
 
 urlpatterns = [
-    url(r'^$', views.index, name='index'),
+    url(r'^$', views.home, name='home'),
     url(r'^omp/', include('omp.urls')), #maps any URLs starting with omp to be handled by omp app
     url(r'^admin/', admin.site.urls),
 ]

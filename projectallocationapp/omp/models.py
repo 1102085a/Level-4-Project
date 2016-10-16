@@ -1,13 +1,21 @@
 from __future__ import unicode_literals
-
+from django.template.defaultfilters import slugify
 from django.db import models
 
 class User(models.Model):
     id = models.CharField(max_length=10, unique=True, primary_key=True)
     name = models.CharField(max_length=128)
-    studentAccess = models.BooleanField(default=False)
-    supervisorAccess = models.BooleanField(default=False)
-    adminAccess = models.BooleanField(default=False)
+    student_Access = models.BooleanField(default=False)
+    supervisor_Access = models.BooleanField(default=False)
+    admin_Access = models.BooleanField(default=False)
+
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.id)
+        super(User, self).save(*args, **kwargs)
+
+    class Meta:
+        verbose_name_plural = 'users'
 
     def __str__(self):
         return self.name
@@ -25,6 +33,14 @@ class Project(models.Model):
     name = models.CharField(max_length=128)
     description = models.CharField(max_length=500)
     softeng = models.BooleanField(default=False)
+    category = models.ForeignKey(Category)
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.id)
+        super(Project, self).save(*args, **kwargs)
+
+    class Meta:
+        verbose_name_plural = 'projects'
 
     def __str__(self):
         return self.id

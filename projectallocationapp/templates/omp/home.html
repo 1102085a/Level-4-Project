@@ -1,23 +1,18 @@
 <!DOCTYPE html>
 
+{% extends 'omp/base.html' %}
+
 {% load staticfiles %}
 
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>OMP Homepage</title>
-    <!-- CSS -->
-<link rel="stylesheet" href="{% static 'css/base.css' %}" />
-<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
-</head>
-<body>
+    <link rel="stylesheet" href="{% static 'css/base.css' %}" />
 
-<ul id="navbar">
-  <li><img src="{% static 'images/UofG.png' %}" alt="University of Glasgow Logo" /></li>
-  <li><h1>Optimal Matching Portal</h1></li>
-</ul>
+{% block title %} OMP Homepage {% endblock %}
 
-<p>This is the OMP homepage! Take a look around!</p>
+{% block content %}
 
-</body>
-</html>
+    <p>This is the OMP homepage! Take a look around!</p>
+    <p>Go to the <a href="/omp/dash/">dashboard!</a></p>
+    <br />
+    {{ construction }}
+
+{% endblock %}

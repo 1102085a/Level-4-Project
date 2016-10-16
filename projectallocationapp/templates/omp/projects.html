@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+
+{% extends 'omp/base.html' %}
+
+{% block title %} OMP Projects {% endblock %}
+
+{% block content %}
+
+    <p>This is the project list! Take a look around!</p>
+    <p>Go to the <a href="/omp/dash">dash!</a></p>
+
+    <div>
+        {% if categories %}
+        <ul>
+            {% for project in projects %}
+                <li>{{ project.name }}</li>
+            {% endfor %}
+        </ul>
+        {% else %}
+            <strong>There are no projects yet.</strong>
+        {% endif %}
+    </div>
+
+{% endblock %}

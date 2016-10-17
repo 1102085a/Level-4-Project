@@ -1,14 +1,11 @@
 from __future__ import unicode_literals
 from django.template.defaultfilters import slugify
 from django.db import models
+from django.contrib.auth.models import User
 
-class User(models.Model):
-    id = models.CharField(max_length=10, unique=True, primary_key=True)
-    name = models.CharField(max_length=128)
-    student_Access = models.BooleanField(default=False)
-    supervisor_Access = models.BooleanField(default=False)
-    admin_Access = models.BooleanField(default=False)
-
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    slug = models.SlugField(unique = True)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.id)
@@ -33,7 +30,8 @@ class Project(models.Model):
     name = models.CharField(max_length=128)
     description = models.CharField(max_length=500)
     softeng = models.BooleanField(default=False)
-    category = models.ForeignKey(Category)
+    category = models.ForeignKey(Category, default="None")
+    slug = models.SlugField(unique = True)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.id)

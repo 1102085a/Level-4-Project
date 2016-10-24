@@ -2,16 +2,20 @@
 
 {% extends 'omp/base.html' %}
 
-{% load staticfiles %}
-
-    <link rel="stylesheet" href="{% static 'css/base.css' %}" />
-
-{% block title %} OMP Homepage {% endblock %}
-
 {% block content %}
+    <h1>Login</h1>
 
-    <p>This is where you'll log in once it's finished!</p>
-    <br />
-    {{ construction }}
+    {% if form.errors %}
+        <p class = "error"> Sorry, you username or password did not match.</p>
+    {% endif %}
 
+    <form method="post" action = "">{% csrf_token %}
+        <label for="username">Username:</label>
+        <input type = "text" name="username" value="" id = "username">
+        <br />
+        <label for="password">Password:</label>
+        <input type = "text" name="password" value="" id = "password">
+
+        <input type="submit" value="login" />
+    </form>
 {% endblock %}

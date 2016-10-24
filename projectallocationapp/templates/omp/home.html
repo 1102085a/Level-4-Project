@@ -2,10 +2,6 @@
 
 {% extends 'omp/base.html' %}
 
-{% load staticfiles %}
-
-    <link rel="stylesheet" href="{% static 'css/base.css' %}" />
-
 {% block title %} OMP Homepage {% endblock %}
 
 {% block content %}
@@ -13,7 +9,6 @@
     <p>This is the OMP homepage! Take a look around!</p>
     <br />
     <p>It'd be nice if you <a href="/omp/login">log in first!</a></p>
-    <p>Or go straight to the <a href="/omp/dash/">dashboard!</a></p>
     <br />
     {{ construction }}
 

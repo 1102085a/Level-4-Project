@@ -40,28 +40,31 @@ class Project(models.Model):
 
 
 class Student(models.Model):
-    studentID = models.ForeignKey(User)
+    user = models.ForeignKey(User)
+    id = models.CharField(max_length=20, primary_key=True)
     project = models.OneToOneField(Project, default='None')
-    category = models.OneToOneField(Category)
+    category = models.ForeignKey(Category)
 
     def __str__(self):
-        return self.name
+        return self.id
 
 
 class Supervisor(models.Model):
-    supervisorID = models.ForeignKey(User)
+    user = models.ForeignKey(User)
+    id = models.CharField(max_length=20, primary_key=True)
     project = models.ForeignKey(Project)
     category = models.ManyToManyField(Category)
 
     def __str__(self):
-        return self.name
+        return self.id
 
 
 class Administrator(models.Model):
-    adminID = models.ForeignKey(User)
+    user = models.ForeignKey(User)
+    id = models.CharField(max_length=20, primary_key=True)
 
     def __str__(self):
-        return self.name
+        return self.id
 
 
 

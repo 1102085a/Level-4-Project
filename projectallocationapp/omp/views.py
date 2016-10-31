@@ -2,9 +2,8 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, render_to_response
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
-from django.template.context_processors import csrf
 from omp.forms import CategoryForm, ProjectForm
-from omp.models import User, Project, Category
+from omp.models import User, Project, Category, Student, Supervisor, Administrator
 
 
 def home(request):
@@ -18,35 +17,58 @@ def home(request):
 
 def user_login(request):
 
-    if request.method == 'POST':
+    if request.method == 'POST':  # Get values from form fields
         username = request.POST.get('username', None)
         password = request.POST.get('password', None)
+        permissions = request.POST.get('permission', None)
         user = authenticate(username=username, password=password)
         if user is not None:
             login(request, user)
-            # Redirect to a success page.
-            return HttpResponseRedirect('/omp/dash/')
+            if permissions == "Student":
+                student = Student.objects.get(pk=username)
+                if student is not None:
+                    return HttpResponseRedirect('/omp/dash_student/')
+            elif permissions == "Supervisor":
+                supervisor = Supervisor.objects.get(pk=username)
+                if supervisor is not None:
+                    return HttpResponseRedirect('/omp/dash_supervisor/')
+            elif permissions == "Administrator":
+                supervisor = Administrator.objects.get(pk=username)
+                if supervisor is not None:
+                    return HttpResponseRedirect('/omp/dash_admin/')
         else:
-            # Return an 'invalid login' error message.
+            # Return user to the homepage (replace later).
             return render_to_response('omp/home.html')
 
     return render(request, 'omp/login.html')
 
 
-def logout(request):
+def user_logout(request):
     logout(request)
     return render_to_response('omp/logout.html')
 
 
-#@login_required("/omp/login")
-def dashboard(request):
-    return render_to_response('omp/dash.html', {'name': request.user.username})
+@login_required(login_url="/omp/login/")
+def studentdashboard(request):
+    return render_to_response('omp/dash_student.html', {'name': request.user.username})
 
 
+@login_required(login_url="/omp/login/")
+def supervisordashboard(request):
+    return render_to_response('omp/dash_supervisor.html', {'name': request.user.username})
+
+
+@login_required(login_url="/omp/login/")
+def admindashboard(request):
+    return render_to_response('omp/dash_admin.html', {'name': request.user.username})
+
+
+@login_required(login_url="/omp/login/")
 def adminpanel(request):
     return HttpResponse("This is for admins only! Go <a href='/omp/'>back!</a>")
 
 
+@login_required(login_url="/omp/login/")
 def categories(request):
 
     # contsruct list of categories and order it by name
@@ -57,6 +79,7 @@ def categories(request):
     return render(request, 'omp/categories.html', context=context_dict)
 
 
+@login_required(login_url="/omp/login/")
 def projects(request):
 
     #construct list of projects and order it by name
@@ -67,10 +90,12 @@ def projects(request):
     return render(request, 'omp/projects.html', context=context_dict)
 
 
+@login_required(login_url="/omp/login/")
 def projectpage(request):
     return HttpResponse("This is where the project will be! Go <a href='/omp/dash/'>back!</a>")
 
 
+@login_required(login_url="/omp/login/")
 def add_category(request):
     form = CategoryForm
 

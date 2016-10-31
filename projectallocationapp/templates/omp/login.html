@@ -14,8 +14,12 @@
         <input type = "text" name="username" value="" id = "username">
         <br />
         <label for="password">Password:</label>
-        <input type = "text" name="password" value="" id = "password">
-
-        <input type="submit" value="login" />
+        <input type = "password" name="password" value="" id = "password">
+        <br>
+        <input type="radio" name="permission" value="Student" checked>Student
+        <input type="radio" name="permission" value="Supervisor" >Supervisor
+        <input type="radio" name="permission" value="Administrator" >Administrator
+        <br>
+        <input type="submit" value="Log In" />
     </form>
 {% endblock %}

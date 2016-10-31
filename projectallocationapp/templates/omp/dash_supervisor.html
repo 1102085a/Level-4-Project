@@ -6,17 +6,13 @@
 
 {% block content %}
 
-    {% if user %}
-        <p>This is your dashboard, {{ name }}! Take a look around!</p>
+        <p>This is your dashboard, {{ name }}! You are logged in as a supervisor.</p>
         <p>Go to the <a href="/omp/">homepage!</a></p>
 
         <p>There is a list of categories <a href="/omp/dash/categories/">here</a></p>
 
         <p>Or, take a look at the <a href="/omp/dash/projects/">projects!</a></p>
-        <p>Try <a href="/omp/dash/addcategories/">adding</a> one!</p>
 
         <p>You can <a href="/omp/logout/">logout </a>here.</p>
-    {% else %}
-        This user does not exist!
-    {% endif %}
+
 {% endblock %}

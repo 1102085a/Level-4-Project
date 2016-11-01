@@ -6,6 +6,9 @@ from omp.forms import CategoryForm, ProjectForm
 from omp.models import User, Project, Category, Student, Supervisor, Administrator
 
 
+permission = ''
+
+
 def home(request):
     # Construct a dictionary to pass to the template engine as its context.
     # Note the key 'message' is the same as {{ message }} in the template!
@@ -17,24 +20,28 @@ def home(request):
 
 def user_login(request):
 
+    global permission
     if request.method == 'POST':  # Get values from form fields
         username = request.POST.get('username', None)
         password = request.POST.get('password', None)
-        permissions = request.POST.get('permission', None)
+        usertype = request.POST.get('permission', None)
         user = authenticate(username=username, password=password)
         if user is not None:
             login(request, user)
-            if permissions == "Student":
+            if usertype == "Student":
                 student = Student.objects.get(pk=username)
                 if student is not None:
+                    permission = 'Student'
                     return HttpResponseRedirect('/omp/dash_student/')
-            elif permissions == "Supervisor":
+            elif usertype == "Supervisor":
                 supervisor = Supervisor.objects.get(pk=username)
                 if supervisor is not None:
+                    permission = ''
                     return HttpResponseRedirect('/omp/dash_supervisor/')
-            elif permissions == "Administrator":
-                supervisor = Administrator.objects.get(pk=username)
-                if supervisor is not None:
+            elif usertype == "Administrator":
+                admin = Administrator.objects.get(pk=username)
+                if admin is not None:
+                    permission = 'Admin'
                     return HttpResponseRedirect('/omp/dash_admin/')
         else:
             # Return user to the homepage (replace later).
@@ -49,18 +56,36 @@ def user_logout(request):
 
 
 @login_required(login_url="/omp/login/")
-def studentdashboard(request):
-    return render_to_response('omp/dash_student.html', {'name': request.user.username})
+def studentdash(request):
+    global permission
+    if permission == "Student":
+        return render_to_response('omp/dash_student.html', {'name': request.user.username})
+    elif permission == "Supervisor":
+        return HttpResponseRedirect('/omp/dash_supervisor/')
+    else:
+        return HttpResponseRedirect('/omp/dash_admin/')
 
 
 @login_required(login_url="/omp/login/")
-def supervisordashboard(request):
-    return render_to_response('omp/dash_supervisor.html', {'name': request.user.username})
+def supervisordash(request):
+    global permission
+    if permission == "Supervisor":
+        return render_to_response('omp/dash_supervisor.html', {'name': request.user.username})
+    elif permission == "Admin":
+        return HttpResponseRedirect('/omp/dash_admin/')
+    else:
+        return HttpResponseRedirect('/omp/dash_student/')
 
 
 @login_required(login_url="/omp/login/")
-def admindashboard(request):
-    return render_to_response('omp/dash_admin.html', {'name': request.user.username})
+def admindash(request):
+    global permission
+    if permission == "Administrator":
+        return render_to_response('omp/dash_admin.html', {'name': request.user.username})
+    elif permission == "Supervisor":
+        return HttpResponseRedirect('/omp/dash_supervisor/')
+    else:
+        return HttpResponseRedirect('/omp/dash_student/')
 
 
 @login_required(login_url="/omp/login/")

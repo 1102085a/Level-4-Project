@@ -6,13 +6,24 @@
 
 {% block content %}
 
-        <p>This is your dashboard, {{ name }}! You are logged in as a supervisor.</p>
-        <p>Go to the <a href="/omp/">homepage!</a></p>
+    <p>This is your dashboard, {{ user.username }}! You are logged in as a supervisor.</p>
+    <p>Your id is: {{ supervisor.id }}</p>
 
-        <p>There is a list of categories <a href="/omp/dash/categories/">here</a></p>
+    <p>
+    {% if categories %}
+        <p>You are subscribed to:</p>
+        <ul>
+            {% for category in categories %}
+            <li>
+                <a href="/omp/category/{{ category.slug }}">{{ category.name }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <strong>You're not subscribed to any categories.</strong>
+    {% endif %}
+    </div>
 
-        <p>Or, take a look at the <a href="/omp/dash/projects/">projects!</a></p>
-
-        <p>You can <a href="/omp/logout/">logout </a>here.</p>
+    <p>You can <a href="/omp/logout/">logout </a>here.</p>
 
 {% endblock %}

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+
+{% extends 'omp/base.html' %}
+
+{% block title %} OMP Projects {% endblock %}
+
+{% block content %}
+
+    <div>
+        {% if project %}
+                {{ project.name }}
+                {{ project. description }}
+        {% else %}
+            <strong>This project does not exist.</strong>
+        {% endif %}
+    </div>
+
+{% endblock %}

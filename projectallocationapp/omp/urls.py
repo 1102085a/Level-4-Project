@@ -4,13 +4,13 @@ from omp import views
 urlpatterns = [
     url(r'^$', views.home, name='home'),
     url(r'adminpanel', views.adminpanel, name='adminpanel'),
-    url(r'^dash_student/$', views.studentdash, name='studentdashboard'),
-    url(r'^dash_supervisor/$', views.supervisordash, name='supervisordashboard'),
-    url(r'^dash_admin/$', views.admindash, name='admindashboard'),
+    url(r'^dashboard/$', views.dashboard, name='dashboard'),
+    url(r'^dashboard/(?P<username>[\w\-]+)/$', views.dashboard, name='dashboard'),
     url(r'^login/$', views.user_login, name='login'),
     url(r'^logout/$', views.user_logout, name='logout'),
-    url(r'^dash/projects/$', views.projects, name='projectlist'),
-    url(r'^dash/categories/$', views.categories, name='categorylist'),
-    url(r'^dash/add_category/$', views.add_category, name='add category'),
+    url(r'^category/(?P<category_name_slug>[\w\-]+)/$', views.category, name='show category'),
+    url(r'^/(?P<project_name_slug>[\w\-]+)$', views.project, name='show project'),
+    url(r'^add_category/$', views.add_category, name='add category'),
+    url(r'^add_project/$', views.add_project, name='add project'),
 
 ]

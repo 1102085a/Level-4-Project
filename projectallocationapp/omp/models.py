@@ -26,7 +26,7 @@ class Project(models.Model):
     description = models.CharField(max_length=500)
     softeng = models.BooleanField(default=False)
     category = models.ForeignKey(Category, default="None")
-    slug = models.SlugField(unique = True)
+    slug = models.SlugField(unique=True)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.id)
@@ -42,7 +42,7 @@ class Project(models.Model):
 class Student(models.Model):
     user = models.ForeignKey(User)
     id = models.CharField(max_length=20, primary_key=True)
-    project = models.OneToOneField(Project, default='None')
+    project = models.ForeignKey(Project, default='None')
     category = models.ForeignKey(Category)
 
     def __str__(self):

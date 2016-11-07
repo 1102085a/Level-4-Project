@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+
+{% extends 'omp/base.html' %}
+
+{% block title %} OMP Categories {% endblock %}
+
+{% block content %}
+
+    <div>
+    {% if category %}
+        <h1>{{ category.name }}</h1>
+        {% if projects %}
+            <ul>
+            {% for project in projects %}
+            <li>
+                <a href="/omp/category/{{ category.slug }}/{{ project.slug }}">{{ project.name }}</a>
+            </li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <strong>No projects currently in category.</strong>
+        {% endif %}
+    {% else %}
+        The specified category does not exist!
+    {% endif %}
+    </div>
+
+    <p>Go to the <a href="/omp/dashboard/">dash!</a></p>
+
+{% endblock %}

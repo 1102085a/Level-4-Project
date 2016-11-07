@@ -32,20 +32,22 @@ def user_login(request):
                 student = Student.objects.get(pk=username)
                 if student is not None:
                     permission = 'Student'
-                    return HttpResponseRedirect('/omp/dash_student/')
             elif usertype == "Supervisor":
                 supervisor = Supervisor.objects.get(pk=username)
                 if supervisor is not None:
-                    permission = ''
-                    return HttpResponseRedirect('/omp/dash_supervisor/')
+                    permission = 'Supervisor'
             elif usertype == "Administrator":
                 admin = Administrator.objects.get(pk=username)
                 if admin is not None:
                     permission = 'Admin'
-                    return HttpResponseRedirect('/omp/dash_admin/')
+
         else:
             # Return user to the homepage (replace later).
             return render_to_response('omp/home.html')
+
+        urlresponse = '/omp/dashboard/' + username
+
+        return HttpResponseRedirect(urlresponse)
 
     return render(request, 'omp/login.html')
 
@@ -56,36 +58,24 @@ def user_logout(request):
 
 
 @login_required(login_url="/omp/login/")
-def studentdash(request):
+def dashboard(request, username):
     global permission
+    context_dict = {}
+    category_list = Category.objects.order_by('id')
+    user = request.user
+    context_dict['categories'] = category_list
+    context_dict['user'] = user
+
     if permission == "Student":
-        return render_to_response('omp/dash_student.html', {'name': request.user.username})
-    elif permission == "Supervisor":
-        return HttpResponseRedirect('/omp/dash_supervisor/')
-    else:
-        return HttpResponseRedirect('/omp/dash_admin/')
-
-
-@login_required(login_url="/omp/login/")
-def supervisordash(request):
-    global permission
+        return render_to_response('omp/dash_student.html', context=context_dict)
     if permission == "Supervisor":
-        return render_to_response('omp/dash_supervisor.html', {'name': request.user.username})
-    elif permission == "Admin":
-        return HttpResponseRedirect('/omp/dash_admin/')
-    else:
-        return HttpResponseRedirect('/omp/dash_student/')
-
-
-@login_required(login_url="/omp/login/")
-def admindash(request):
-    global permission
+        supervisor = Supervisor.objects.get(pk=username)
+        context_dict['supervisor'] = supervisor
+        return render_to_response('omp/dash_supervisor.html', context=context_dict)
     if permission == "Administrator":
-        return render_to_response('omp/dash_admin.html', {'name': request.user.username})
-    elif permission == "Supervisor":
-        return HttpResponseRedirect('/omp/dash_supervisor/')
+        return render_to_response('omp/dash_admin.html', context=context_dict)
     else:
-        return HttpResponseRedirect('/omp/dash_student/')
+        return HttpResponseRedirect('/omp/login')
 
 
 @login_required(login_url="/omp/login/")
@@ -94,25 +84,45 @@ def adminpanel(request):
 
 
 @login_required(login_url="/omp/login/")
-def categories(request):
+def category(request, category_name_slug):
+    context_dict = {}
 
-    # contsruct list of categories and order it by name
-    category_list = Category.objects.order_by('name')
-    context_dict = {'categories': category_list}
+    try:
+        # Can we find a category name slug with the given name?
+        # If we can't, the .get() method raises a DoesNotExist exception.
+        # So the .get() method returns one model instance or raises an exception.
 
-    # Render and send back response
-    return render(request, 'omp/categories.html', context=context_dict)
+        category = Category.objects.get(slug=category_name_slug)
+        projects = Project.objects.filter(category=category)
+
+        context_dict['projects'] = projects
+        context_dict['category'] = category
+
+    except Category.DoesNotExist:
+        context_dict['projects'] = None
+        context_dict['category'] = None
+
+    return render(request, 'omp/category.html', context=context_dict)
 
 
 @login_required(login_url="/omp/login/")
-def projects(request):
+def project(request, project_name_slug):
 
-    #construct list of projects and order it by name
-    project_list = Project.objects.order_by('name')
-    context_dict = {'projects': project_list}
+    context_dict = {}
+
+    try:
+        # Can we find a category name slug with the given name?
+        # If we can't, the .get() method raises a DoesNotExist exception.
+        # So the .get() method returns one model instance or raises an exception.
+
+        project = Project.objects.get(slug=project_name_slug)
+        context_dict['projects'] = project
+
+    except Category.DoesNotExist:
+        context_dict['projects'] = None
 
     # Render and send back response
-    return render(request, 'omp/projects.html', context=context_dict)
+    return render(request, 'omp/project.html', context=context_dict)
 
 
 @login_required(login_url="/omp/login/")
@@ -131,12 +141,26 @@ def add_category(request):
         if form.is_valid():
             # Save the new category to the database.
             form.save(commit=True)
-            #redirect to dashboard after adding category
-            return dashboard(request)
+            # redirect to dashboard after adding category
+            return admindash(request)
         else:
-        # The supplied form contained errors -
-        # just print them to the terminal.
+            # The supplied form contained errors -
+            # just print them to the terminal.
             print(form.errors)
     # Will handle the bad form, new form, or no form supplied cases.
     # Render the form with error messages (if any).
     return render(request, 'omp/add_category.html', {'form': form})
+
+
+@login_required(login_url="/omp/login/")
+def add_project(request):
+    form = ProjectForm
+
+    if request.method == 'POST':
+        form = ProjectForm(request.POST)
+        if form.is_valid():
+            form.save(commit=True)
+            return HttpResponseRedirect('omp/dash_supervisor')
+        else:
+            print(form.errors)
+    return render(request, 'omp/add_project.html', {'form': form})

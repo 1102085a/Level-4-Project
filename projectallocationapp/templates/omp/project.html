@@ -8,11 +8,13 @@
 
     <div>
         {% if project %}
-                {{ project.name }}
-                {{ project. description }}
+                <p>{{ project.name }}</p>
+                <P>{{ project.description }}</P>
         {% else %}
             <strong>This project does not exist.</strong>
         {% endif %}
     </div>
+
+    <p>Return to <a href="/omp/category/{{ category.slug }}">{{ category.name }}</a></p>
 
 {% endblock %}

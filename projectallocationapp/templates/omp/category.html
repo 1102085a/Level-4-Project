@@ -13,7 +13,7 @@
             <ul>
             {% for project in projects %}
             <li>
-                <a href="/omp/category/{{ category.slug }}/{{ project.slug }}">{{ project.name }}</a>
+                <a href="/omp/category/{{ category.slug }}/project/{{ project.slug }}">{{ project.name }}</a>
             </li>
             {% endfor %}
             </ul>
@@ -25,6 +25,6 @@
     {% endif %}
     </div>
 
-    <p>Go to the <a href="/omp/dashboard/">dash!</a></p>
+    <p>Return to the <a href="/omp/dashboard/{{ user.username }}">dash!</a></p>
 
 {% endblock %}

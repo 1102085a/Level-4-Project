@@ -88,9 +88,8 @@ def category(request, category_name_slug):
     context_dict = {}
 
     try:
-        # Can we find a category name slug with the given name?
-        # If we can't, the .get() method raises a DoesNotExist exception.
-        # So the .get() method returns one model instance or raises an exception.
+        user = request.user
+        context_dict['user'] = user
 
         category = Category.objects.get(slug=category_name_slug)
         projects = Project.objects.filter(category=category)
@@ -106,20 +105,21 @@ def category(request, category_name_slug):
 
 
 @login_required(login_url="/omp/login/")
-def project(request, project_name_slug):
+def project(request, category_name_slug, project_name_slug):
 
     context_dict = {}
 
     try:
-        # Can we find a category name slug with the given name?
-        # If we can't, the .get() method raises a DoesNotExist exception.
-        # So the .get() method returns one model instance or raises an exception.
-
+        # Can we find a name slug with the given name?
+        # If we can't, .get() raises a DoesNotExist exception.
+        category = Category.objects.get(slug=category_name_slug)
         project = Project.objects.get(slug=project_name_slug)
-        context_dict['projects'] = project
+        context_dict['category'] = category
+        context_dict['project'] = project
 
-    except Category.DoesNotExist:
-        context_dict['projects'] = None
+    except Project.DoesNotExist:
+        context_dict['category'] = None
+        context_dict['project'] = None
 
     # Render and send back response
     return render(request, 'omp/project.html', context=context_dict)

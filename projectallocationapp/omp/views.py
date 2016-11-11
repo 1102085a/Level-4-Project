@@ -61,21 +61,34 @@ def user_logout(request):
 def dashboard(request, username):
     global permission
     context_dict = {}
-    category_list = Category.objects.order_by('id')
     user = request.user
-    context_dict['categories'] = category_list
+    usertype = getuserobject(username)
     context_dict['user'] = user
 
     if permission == "Student":
+        context_dict['student'] = usertype
         return render_to_response('omp/dash_student.html', context=context_dict)
     if permission == "Supervisor":
-        supervisor = Supervisor.objects.get(pk=username)
-        context_dict['supervisor'] = supervisor
+        category_list = usertype.category.all()
+        context_dict['supervisor'] = usertype
+        context_dict['categories'] = category_list
         return render_to_response('omp/dash_supervisor.html', context=context_dict)
     if permission == "Administrator":
+        context_dict['admin'] = usertype
         return render_to_response('omp/dash_admin.html', context=context_dict)
     else:
         return HttpResponseRedirect('/omp/login')
+
+
+def getuserobject(username):
+    global permission
+    if permission == "Student":
+        return Student.objects.get(pk=username)
+    if permission == "Supervisor":
+        return Supervisor.objects.get(pk=username)
+    if permission == "Administrator":
+        return Administrator.objects.get(pk=username)
+
 
 
 @login_required(login_url="/omp/login/")

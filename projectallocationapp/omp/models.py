@@ -6,8 +6,8 @@ from django.contrib.auth.models import User
 
 class Category(models.Model):
     id = models.CharField(max_length=10, unique=True, primary_key=True)
-    name = models.CharField(max_length=128, unique = True)
-    slug = models.SlugField(unique = True)
+    name = models.CharField(max_length=128, unique=True)
+    slug = models.SlugField(unique=True)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.id)
@@ -42,8 +42,9 @@ class Project(models.Model):
 class Student(models.Model):
     user = models.ForeignKey(User)
     id = models.CharField(max_length=20, primary_key=True)
-    project = models.ForeignKey(Project, default='None')
+    project = models.ForeignKey(Project, default='None',related_name='assigned_project')
     category = models.ForeignKey(Category)
+    favourites = models.ManyToManyField(Project, default='None',related_name='favourite_projects')
 
     def __str__(self):
         return self.id

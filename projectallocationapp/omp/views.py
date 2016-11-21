@@ -6,7 +6,7 @@ from omp.forms import CategoryForm, ProjectForm
 from omp.models import User, Project, Category, Student, Supervisor, Administrator
 
 
-permission = ''
+#permission = ''
 
 
 def home(request):
@@ -20,33 +20,32 @@ def home(request):
 
 def user_login(request):
 
-    global permission
     if request.method == 'POST':  # Get values from form fields
         username = request.POST.get('username', None)
         password = request.POST.get('password', None)
         usertype = request.POST.get('permission', None)
         user = authenticate(username=username, password=password)
+        request.session['username'] = username
         if user is not None:
             login(request, user)
             if usertype == "Student":
                 student = Student.objects.get(pk=username)
                 if student is not None:
-                    permission = 'Student'
+                    request.session['permission'] = "Student"
             elif usertype == "Supervisor":
                 supervisor = Supervisor.objects.get(pk=username)
                 if supervisor is not None:
-                    permission = 'Supervisor'
+                    request.session['permission'] = "Supervisor"
             elif usertype == "Administrator":
                 admin = Administrator.objects.get(pk=username)
                 if admin is not None:
-                    permission = 'Admin'
+                    request.session['permission'] = "Administrator"
 
         else:
             # Return user to the homepage (replace later).
             return render_to_response('omp/home.html')
 
         urlresponse = '/omp/dashboard/' + username
-
         return HttpResponseRedirect(urlresponse)
 
     return render(request, 'omp/login.html')
@@ -59,10 +58,10 @@ def user_logout(request):
 
 @login_required(login_url="/omp/login/")
 def dashboard(request, username):
-    global permission
+    permission = request.session['permission']
     context_dict = {}
     user = request.user
-    usertype = getuserobject(username)
+    usertype = getuserobject(username, request)
     context_dict['user'] = user
 
     if permission == "Student":
@@ -80,15 +79,14 @@ def dashboard(request, username):
         return HttpResponseRedirect('/omp/login')
 
 
-def getuserobject(username):
-    global permission
+def getuserobject(username, request):
+    permission = request.session['permission']
     if permission == "Student":
         return Student.objects.get(pk=username)
     if permission == "Supervisor":
         return Supervisor.objects.get(pk=username)
     if permission == "Administrator":
         return Administrator.objects.get(pk=username)
-
 
 
 @login_required(login_url="/omp/login/")
@@ -119,6 +117,14 @@ def category(request, category_name_slug):
 
 @login_required(login_url="/omp/login/")
 def project(request, category_name_slug, project_name_slug):
+
+    if request.method == 'POST':  # Get values from form fields
+        username = request.User.get('username')
+        student = Student.objects.get(pk=username)
+        project = Project.objects.get(slug=project_name_slug)
+        student.favourites.add(project)
+        student.save()
+
 
     context_dict = {}
 
@@ -155,7 +161,7 @@ def add_category(request):
             # Save the new category to the database.
             form.save(commit=True)
             # redirect to dashboard after adding category
-            return admindash(request)
+            return dashboard(request)
         else:
             # The supplied form contained errors -
             # just print them to the terminal.
@@ -177,3 +183,4 @@ def add_project(request):
         else:
             print(form.errors)
     return render(request, 'omp/add_project.html', {'form': form})
+

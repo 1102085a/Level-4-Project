@@ -6,11 +6,23 @@
 
 {% block content %}
 
-        <p>This is your dashboard, {{ name }}! You are logged in as a student.</p>
-        <p>Go to the <a href="/omp/">homepage!</a></p>
+    <p>This is your dashboard, {{ name }}! You are logged in as a student.</p>
 
-        <p>Or, take a look at the <a href="/omp/dash/projects/">projects!</a></p>
+    <p>You are subscribed to <a href="/omp/category/{{ student.category.slug }}">{{ student.category.name }}</a></p>
 
-        <p>You can <a href="/omp/logout/">logout </a>here.</p>
+    {% if student.favourites %}
+        <p>Favourite projects:</p>
+        <ul>
+        {% for project in favourites %}
+            <li>
+                <a href="/omp/project/{{ project.slug }}">{{ project.name }}</a>
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>You don't have any favourite projects yet.</p>
+    {% endif %}
+
+    <p>You can <a href="/omp/logout/">logout </a>here.</p>
 
 {% endblock %}

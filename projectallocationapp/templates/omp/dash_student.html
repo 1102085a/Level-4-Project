@@ -13,9 +13,9 @@
     {% if student.favourites %}
         <p>Favourite projects:</p>
         <ul>
-        {% for project in favourites %}
+        {% for project in student.favourites.all %}
             <li>
-                <a href="/omp/project/{{ project.slug }}">{{ project.name }}</a>
+                <a href="/omp/category/{{ project.category.id }}/project/{{ project.slug }}">{{ project.name }}</a>
             </li>
         {% endfor %}
         </ul>

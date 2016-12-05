@@ -14,11 +14,12 @@
             <strong>This project does not exist.</strong>
         {% endif %}
     </div>
-    {{ if student }}
-    <p>Add this project to favourites:</p><form method="post" action = ""><input type="submit" value="Add" />
-    {{ endif }}
+    {% if student %}
+    <p>Add this project to favourites:</p><form method="post" action = "">{% csrf_token %}<input type="submit" value="Add" /></form>
+    {% endif %}
 
 
     <p>Return to <a href="/omp/category/{{ category.slug }}">{{ category.name }}</a></p>
 
 {% endblock %}
+

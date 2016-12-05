@@ -119,16 +119,24 @@ def category(request, category_name_slug):
 def project(request, category_name_slug, project_name_slug):
 
     if request.method == 'POST':  # Get values from form fields
-        username = request.User.get('username')
+        username = request.user.username
         student = Student.objects.get(pk=username)
         project = Project.objects.get(slug=project_name_slug)
         student.favourites.add(project)
         student.save()
+        urlresponse = '/omp/dashboard/' + username
+        return HttpResponseRedirect(urlresponse)
 
 
     context_dict = {}
 
     try:
+
+        user = request.user
+        username = request.session['username']
+        student = getuserobject(username, request)
+        context_dict['user'] = user
+        context_dict['student'] = student
         # Can we find a name slug with the given name?
         # If we can't, .get() raises a DoesNotExist exception.
         category = Category.objects.get(slug=category_name_slug)
@@ -142,11 +150,6 @@ def project(request, category_name_slug, project_name_slug):
 
     # Render and send back response
     return render(request, 'omp/project.html', context=context_dict)
-
-
-@login_required(login_url="/omp/login/")
-def projectpage(request):
-    return HttpResponse("This is where the project will be! Go <a href='/omp/dash/'>back!</a>")
 
 
 @login_required(login_url="/omp/login/")
@@ -179,7 +182,7 @@ def add_project(request):
         form = ProjectForm(request.POST)
         if form.is_valid():
             form.save(commit=True)
-            return HttpResponseRedirect('omp/dash_supervisor')
+            return HttpResponseRedirect('omp/dashboard')
         else:
             print(form.errors)
     return render(request, 'omp/add_project.html', {'form': form})

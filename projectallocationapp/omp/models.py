@@ -42,9 +42,9 @@ class Project(models.Model):
 class Student(models.Model):
     user = models.ForeignKey(User)
     id = models.CharField(max_length=20, primary_key=True)
-    project = models.ForeignKey(Project, default='None',related_name='assigned_project')
+    project = models.ForeignKey(Project, default='None', related_name='assigned_project')
     category = models.ForeignKey(Category)
-    favourites = models.ManyToManyField(Project, default='None',related_name='favourite_projects')
+    favourites = models.ManyToManyField(Project, null=True, blank=True, related_name='favourite_projects')
 
     def __str__(self):
         return self.id

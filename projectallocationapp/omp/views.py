@@ -3,7 +3,7 @@ from django.shortcuts import render, render_to_response
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 from omp.forms import CategoryForm, ProjectForm
-from omp.models import User, Project, Category, Student, Supervisor, Administrator
+from omp.models import User, Project, Category, Student, Supervisor, Administrator, Preferences
 
 
 #permission = ''
@@ -19,14 +19,15 @@ def home(request):
 
 
 def user_login(request):
+    error_message = ""
 
     if request.method == 'POST':  # Get values from form fields
         username = request.POST.get('username', None)
         password = request.POST.get('password', None)
         usertype = request.POST.get('permission', None)
         user = authenticate(username=username, password=password)
-        request.session['username'] = username
-        if user is not None:
+        request.session['username'] = username  # store username for session
+        if user: # user exists
             login(request, user)
             if usertype == "Student":
                 student = Student.objects.get(pk=username)
@@ -41,14 +42,19 @@ def user_login(request):
                 if admin is not None:
                     request.session['permission'] = "Administrator"
 
+            urlresponse = '/omp/dashboard/' + username
+            return HttpResponseRedirect(urlresponse)
+
         else:
-            # Return user to the homepage (replace later).
-            return render_to_response('omp/home.html')
+            # Display error message.
+            # Bad login details were provided. So we can't log the user in.
+            user = User.objects.filter(username=username)
+            if user:  # username exists, so password must be incorrect
+                error_message = "Incorrect password for username {0}".format(username)
+            else:  # username doesn't exist
+                error_message = "Username {0} not recognised".format(username)
 
-        urlresponse = '/omp/dashboard/' + username
-        return HttpResponseRedirect(urlresponse)
-
-    return render(request, 'omp/login.html')
+    return render(request, 'omp/login.html', {'login_message' : error_message})
 
 
 def user_logout(request):
@@ -58,14 +64,21 @@ def user_logout(request):
 
 @login_required(login_url="/omp/login/")
 def dashboard(request, username):
-    permission = request.session['permission']
+    permission = request.session['permission']  # get user permission from session
     context_dict = {}
+    context_dict['error_message'] = ""
     user = request.user
-    usertype = getuserobject(username, request)
+    usertype = getuserobject(username, request)  # get user object for permission
     context_dict['user'] = user
 
+    # check user permission
     if permission == "Student":
         context_dict['student'] = usertype
+        try:
+            student_preferences = Preferences.objects.filter(student__id=username)
+            context_dict['preferences'] = student_preferences
+        except Preferences.DoesNotExist:
+            context_dict['preferences'] = None
         return render_to_response('omp/dash_student.html', context=context_dict)
     if permission == "Supervisor":
         category_list = usertype.category.all()
@@ -79,6 +92,7 @@ def dashboard(request, username):
         return HttpResponseRedirect('/omp/login')
 
 
+# checks user permission and retrieves appropriate object
 def getuserobject(username, request):
     permission = request.session['permission']
     if permission == "Student":
@@ -117,18 +131,28 @@ def category(request, category_name_slug):
 
 @login_required(login_url="/omp/login/")
 def project(request, category_name_slug, project_name_slug):
+    context_dict = {}
+    confirmation = ""
 
     if request.method == 'POST':  # Get values from form fields
         username = request.user.username
         student = Student.objects.get(pk=username)
         project = Project.objects.get(slug=project_name_slug)
-        student.favourites.add(project)
-        student.save()
-        urlresponse = '/omp/dashboard/' + username
-        return HttpResponseRedirect(urlresponse)
+        # check which form was submitted
+        if 'Favourite' in request.POST:
+            student.favourites.add(project)
+            student.save()
+            urlresponse = '/omp/dashboard/' + username
+            confirmation = "Project added to favourites"
+            context_dict['fave_confirm_message'] = confirmation
+            return HttpResponseRedirect(urlresponse)
+        elif 'Preference' in request.POST:
+            pref = request.POST.get('ranking', None)
+            p = Preferences(project=project, student=student, ranking=pref)
+            p.save()
+            confirmation = "Project saved to preferences"
+            context_dict['pref_confirm_message'] = confirmation
 
-
-    context_dict = {}
 
     try:
 

@@ -50,6 +50,12 @@ class Student(models.Model):
         return self.id
 
 
+class Preferences(models.Model):
+    project = models.ManyToManyField(Project)
+    student = models.ManyToManyField(Student)
+    ranking = models.IntegerField()
+
+
 class Supervisor(models.Model):
     user = models.ForeignKey(User)
     id = models.CharField(max_length=20, primary_key=True)

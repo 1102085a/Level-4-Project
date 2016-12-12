@@ -17,7 +17,7 @@
     {% if student %}
     <p>Add this project to favourites:</p>
     <form method="post" action = "">{% csrf_token %}
-    <input type="submit" value="Favourite" /></form>
+    <input name="Favourite" type="submit" value="Add" /></form>
     <br>
     {{ fave_confirm_message }}
 
@@ -30,7 +30,7 @@
           <option value="4">4</option>
           <option value="5">5</option>
         </select>
-    <input type="submit" value="Preference" /></form>
+    <input name = "Preferences" type="submit" value="Submit" /></form>
     <br>
     {{ pref_confirm_message }}
     {% endif %}

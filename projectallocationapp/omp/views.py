@@ -133,26 +133,24 @@ def category(request, category_name_slug):
 def project(request, category_name_slug, project_name_slug):
     context_dict = {}
     confirmation = ""
+    error=""
 
     if request.method == 'POST':  # Get values from form fields
-        username = request.user.username
-        student = Student.objects.get(pk=username)
-        project = Project.objects.get(slug=project_name_slug)
+        username = request.session['username']
+        s = Student.objects.get(pk=username)
+        p = Project.objects.get(slug=project_name_slug)
         # check which form was submitted
         if 'Favourite' in request.POST:
-            student.favourites.add(project)
-            student.save()
-            urlresponse = '/omp/dashboard/' + username
-            confirmation = "Project added to favourites"
+            s.favourites.add(p)
+            s.save()
+            confirmation = "Project added to favourites."
             context_dict['fave_confirm_message'] = confirmation
-            return HttpResponseRedirect(urlresponse)
         elif 'Preference' in request.POST:
             pref = request.POST.get('ranking', None)
-            p = Preferences(project=project, student=student, ranking=pref)
+            p = Preferences(project=p, student=s, ranking=pref)
             p.save()
-            confirmation = "Project saved to preferences"
+            confirmation = "Project saved to preferences."
             context_dict['pref_confirm_message'] = confirmation
-
 
     try:
 

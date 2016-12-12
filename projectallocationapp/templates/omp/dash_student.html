@@ -26,14 +26,14 @@
 {% if preferences %}
         <p>Project Preferences</p>
         <ul>
-        {% for project in preferences %}
+        {% for project in preferences.all %}
             <li>
                 <a href="/omp/category/{{ project.category.id }}/project/{{ project.slug }}">{{ project.name }}</a>
             </li>
         {% endfor %}
         </ul>
     {% else %}
-        <p>You don't have any favourite projects yet.</p>
+        <p>You don't have any ranked projects.</p>
     {% endif %}
 
     <p>You can <a href="/omp/logout/">logout </a>here.</p>

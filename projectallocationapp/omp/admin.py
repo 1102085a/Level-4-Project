@@ -4,10 +4,10 @@ from django.contrib.auth.models import User
 from omp.models import User, Student, Supervisor, Administrator, Category, Project, Preferences
 
 class CategoryAdmin(admin.ModelAdmin):
-    prepopulated_fields = {'slug':('catid',)}
+    prepopulated_fields = {'slug':('id',)}
 
 class ProjectAdmin(admin.ModelAdmin):
-    prepopulated_fields = {'slug':('proid',)}
+    prepopulated_fields = {'slug':('id',)}
 
 # Update the registration to include this customised interface
 

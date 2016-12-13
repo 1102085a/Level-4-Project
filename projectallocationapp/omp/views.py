@@ -77,6 +77,7 @@ def dashboard(request, username):
         try:
             student_preferences = Preferences.objects.filter(student__id=username)
             context_dict['preferences'] = student_preferences
+            # print(context_dict.get('preferences'))
         except Preferences.DoesNotExist:
             context_dict['preferences'] = None
         return render_to_response('omp/dash_student.html', context=context_dict)

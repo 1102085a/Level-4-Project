@@ -5,12 +5,12 @@ from django.contrib.auth.models import User
 
 
 class Category(models.Model):
-    catid = models.CharField(max_length=10, unique=True, primary_key=True)
+    id = models.CharField(max_length=10, unique=True, primary_key=True)
     name = models.CharField(max_length=128, unique=True)
     slug = models.SlugField(unique=True)
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.catid)
+        self.slug = slugify(self.id)
         super(Category, self).save(*args, **kwargs)
 
     class Meta:
@@ -21,7 +21,7 @@ class Category(models.Model):
 
 
 class Project(models.Model):
-    proid = models.CharField(max_length=10, unique=True, primary_key=True)
+    id = models.CharField(max_length=10, unique=True, primary_key=True)
     name = models.CharField(max_length=128)
     description = models.CharField(max_length=500)
     softeng = models.BooleanField(default=False)
@@ -29,7 +29,7 @@ class Project(models.Model):
     slug = models.SlugField(unique=True)
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.proid)
+        self.slug = slugify(self.id)
         super(Project, self).save(*args, **kwargs)
 
     class Meta:
@@ -41,7 +41,7 @@ class Project(models.Model):
 
 class Student(models.Model):
     user = models.ForeignKey(User)
-    stuid = models.CharField(max_length=20, primary_key=True)
+    id = models.CharField(max_length=20, primary_key=True)
     project = models.ForeignKey(Project, default='None', related_name='assigned_project')
     category = models.ForeignKey(Category)
     favourites = models.ManyToManyField(Project, blank=True, related_name='favourite_projects')
@@ -64,7 +64,7 @@ class Preferences(models.Model):
 
 class Supervisor(models.Model):
     user = models.ForeignKey(User)
-    supid = models.CharField(max_length=20, primary_key=True)
+    id = models.CharField(max_length=20, primary_key=True)
     project = models.ForeignKey(Project)
     category = models.ManyToManyField(Category)
 

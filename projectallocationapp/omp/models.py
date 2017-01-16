@@ -2,7 +2,11 @@ from __future__ import unicode_literals
 from django.template.defaultfilters import slugify
 from django.db import models
 from django.contrib.auth.models import User
+from uuid import uuid4
 
+
+#def generateUUID():
+#   return str(uuid4())
 
 class Category(models.Model):
     id = models.CharField(max_length=10, unique=True, primary_key=True)
@@ -17,7 +21,7 @@ class Category(models.Model):
         verbose_name_plural = 'Categories'
 
     def __str__(self):
-        return self.id
+        return self.name
 
 
 class Project(models.Model):
@@ -36,30 +40,32 @@ class Project(models.Model):
         verbose_name_plural = 'Projects'
 
     def __str__(self):
-        return self.id
+        return self.name
 
 
 class Student(models.Model):
     user = models.ForeignKey(User)
     id = models.CharField(max_length=20, primary_key=True)
-    project = models.ForeignKey(Project, default='None', related_name='assigned_project')
+    project = models.ForeignKey(Project, default='None', related_name='assigned_project', null=True)
     category = models.ForeignKey(Category)
     favourites = models.ManyToManyField(Project, blank=True, related_name='favourite_projects')
+    preference_list = models.ManyToManyField(Project, blank=True, through='PrefListEntry',
+                                             related_name='ranked_projects')
 
     def __str__(self):
         return self.id
 
 
-class Preferences(models.Model):
-    project = models.ManyToManyField(Project)
-    student = models.ManyToManyField(Student)
-    ranking = models.IntegerField()
+class PrefListEntry(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    rank = models.IntegerField()
 
     class Meta:
-        verbose_name_plural = 'Categories'
+        verbose_name_plural = 'Preference Lists'
 
     def __str__(self):
-        return self.id
+        return str(self.student.id)
 
 
 class Supervisor(models.Model):

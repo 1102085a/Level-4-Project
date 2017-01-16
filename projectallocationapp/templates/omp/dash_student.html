@@ -23,12 +23,12 @@
         <p>You don't have any favourite projects yet.</p>
     {% endif %}
 
-{% if preferences %}
+    {% if preferences %}
         <p>Project Preferences</p>
         <ul>
-        {% for project in preferences.all %}
+        {% for pref in preferences %}
             <li>
-                <a href="/omp/category/{{ project.category.id }}/project/{{ project.slug }}">{{ project.name }}</a>
+                {{ pref.rank }}  <a href="/omp/category/{{ pref.project.category.id }}/project/{{ pref.project.slug }}">{{ pref.project.name }}</a>
             </li>
         {% endfor %}
         </ul>

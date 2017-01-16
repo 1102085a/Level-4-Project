@@ -3,7 +3,7 @@ from django.shortcuts import render, render_to_response
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 from omp.forms import CategoryForm, ProjectForm
-from omp.models import User, Project, Category, Student, Supervisor, Administrator, Preferences
+from omp.models import User, Project, Category, Student, Supervisor, Administrator, PrefListEntry
 
 
 #permission = ''
@@ -75,10 +75,10 @@ def dashboard(request, username):
     if permission == "Student":
         context_dict['student'] = usertype
         try:
-            student_preferences = Preferences.objects.filter(student__id=username)
+            student_preferences = PrefListEntry.objects.filter(student__id=username).order_by('rank')
             context_dict['preferences'] = student_preferences
-            # print(context_dict.get('preferences'))
-        except Preferences.DoesNotExist:
+            print(context_dict['preferences'])
+        except PrefListEntry.DoesNotExist:
             context_dict['preferences'] = None
         return render_to_response('omp/dash_student.html', context=context_dict)
     if permission == "Supervisor":
@@ -146,9 +146,9 @@ def project(request, category_name_slug, project_name_slug):
             s.save()
             confirmation = "Project added to favourites."
             context_dict['fave_confirm_message'] = confirmation
-        elif 'Preference' in request.POST:
+        elif 'Preferences' in request.POST:
             pref = request.POST.get('ranking', None)
-            p = Preferences(project=p, student=s, ranking=pref)
+            p = PrefListEntry(project=p, student=s, rank=pref)
             p.save()
             confirmation = "Project saved to preferences."
             context_dict['pref_confirm_message'] = confirmation
@@ -156,6 +156,8 @@ def project(request, category_name_slug, project_name_slug):
     try:
 
         user = request.user
+        if 'username' not in request.session:
+            request.session['username'] = user.username
         username = request.session['username']
         student = getuserobject(username, request)
         context_dict['user'] = user

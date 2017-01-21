@@ -77,7 +77,6 @@ def dashboard(request, username):
         try:
             student_preferences = PrefListEntry.objects.filter(student__id=username).order_by('rank')
             context_dict['preferences'] = student_preferences
-            print(context_dict['preferences'])
         except PrefListEntry.DoesNotExist:
             context_dict['preferences'] = None
         return render_to_response('omp/dash_student.html', context=context_dict)
@@ -148,9 +147,23 @@ def project(request, category_name_slug, project_name_slug):
             context_dict['fave_confirm_message'] = confirmation
         elif 'Preferences' in request.POST:
             pref = request.POST.get('ranking', None)
-            p = PrefListEntry(project=p, student=s, rank=pref)
-            p.save()
-            confirmation = "Project saved to preferences."
+            if not p.softeng and s.softeng:
+                error = "You must select software engineering projects."
+            else:
+                preflist = PrefListEntry.objects.filter(student__id=username).order_by('rank')
+                if preflist.len() == 5:
+                    error = "You already have five projects preferred. Please delete one from the dashboard."
+                else:
+                    for p in preflist:
+                        if pref == preflist.rank:
+                            error = "Project already at this rank, please select a different ranking."
+                    #else:
+                        #checkSupervisors(preflist, project)
+                p = PrefListEntry(project=p, student=s, rank=pref)
+                p.save()
+                confirmation = "Project saved to preferences at " + pref + "."
+
+            context_dict['error_message'] = error
             context_dict['pref_confirm_message'] = confirmation
 
     try:
@@ -176,6 +189,15 @@ def project(request, category_name_slug, project_name_slug):
     # Render and send back response
     return render(request, 'omp/project.html', context=context_dict)
 
+'''
+def checkSupervisors(prefList, proj):
+    supervisor = Supervisor.objects.filter(project=proj)
+    count = 0
+    for pref in prefList:
+        if supervisor.
+
+    return None
+'''
 
 @login_required(login_url="/omp/login/")
 def add_category(request):

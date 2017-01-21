@@ -2,11 +2,18 @@ from __future__ import unicode_literals
 from django.template.defaultfilters import slugify
 from django.db import models
 from django.contrib.auth.models import User
-from uuid import uuid4
+from solo.models import SingletonModel
 
 
-#def generateUUID():
-#   return str(uuid4())
+class Stage(SingletonModel):
+    stage = models.IntegerField(null=False, blank=False, default=1)
+
+    def __unicode__(self):
+        return str(self.stage)
+
+    class Meta:
+        verbose_name = "OMP Stage"
+
 
 class Category(models.Model):
     id = models.CharField(max_length=10, unique=True, primary_key=True)
@@ -25,11 +32,11 @@ class Category(models.Model):
 
 
 class Project(models.Model):
-    id = models.CharField(max_length=10, unique=True, primary_key=True)
     name = models.CharField(max_length=128)
     description = models.CharField(max_length=500)
     softeng = models.BooleanField(default=False)
     category = models.ForeignKey(Category, default="None")
+    supervisor =  models.CharField(max_length=32)
     slug = models.SlugField(unique=True)
 
     def save(self, *args, **kwargs):
@@ -46,6 +53,7 @@ class Project(models.Model):
 class Student(models.Model):
     user = models.ForeignKey(User)
     id = models.CharField(max_length=20, primary_key=True)
+    softeng = models.BooleanField(default=False)
     project = models.ForeignKey(Project, default='None', related_name='assigned_project', null=True)
     category = models.ForeignKey(Category)
     favourites = models.ManyToManyField(Project, blank=True, related_name='favourite_projects')
@@ -65,7 +73,8 @@ class PrefListEntry(models.Model):
         verbose_name_plural = 'Preference Lists'
 
     def __str__(self):
-        return str(self.student.id)
+        name = str(self.student.id) + " pref " + str(self.rank)
+        return name
 
 
 class Supervisor(models.Model):
@@ -73,6 +82,7 @@ class Supervisor(models.Model):
     id = models.CharField(max_length=20, primary_key=True)
     project = models.ForeignKey(Project)
     category = models.ManyToManyField(Category)
+    capacity = models.IntegerField()
 
     def __str__(self):
         return self.id

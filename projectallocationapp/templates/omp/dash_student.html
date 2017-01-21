@@ -9,7 +9,7 @@
     <p>This is your dashboard, {{ user.username }}! You are logged in as a student.</p>
 
     <p>You are subscribed to <a href="/omp/category/{{ student.category.slug }}">{{ student.category.name }}</a></p>
-
+    <div>
     {% if student.favourites %}
         <p>Favourite projects:</p>
         <ul>
@@ -22,7 +22,8 @@
     {% else %}
         <p>You don't have any favourite projects yet.</p>
     {% endif %}
-
+    </div>
+    <div>
     {% if preferences %}
         <p>Project Preferences</p>
         <ul>
@@ -35,6 +36,7 @@
     {% else %}
         <p>You don't have any ranked projects.</p>
     {% endif %}
+    </div>
 
     <p>You can <a href="/omp/logout/">logout </a>here.</p>
 

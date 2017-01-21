@@ -15,7 +15,6 @@ class CategoryForm(forms.ModelForm):
 
 
 class ProjectForm(forms.ModelForm):
-    title = forms.CharField(max_length=128, help_text="Please enter the project id\n")
     name = forms.CharField(max_length=128, help_text="Enter the project title\n")
     description = forms.CharField(max_length=500, help_text="Enter the project description\n")
     softeng = forms.BooleanField(help_text="Software Engineering Project? ")

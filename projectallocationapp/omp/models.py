@@ -5,14 +5,16 @@ from django.contrib.auth.models import User
 from solo.models import SingletonModel
 
 
-class Stage(SingletonModel):
-    stage = models.IntegerField(null=False, blank=False, default=1)
+class SiteConfiguration(SingletonModel):
+    site_name = models.CharField(max_length=255, default='Optimal Matching Portal')
+    maintenance_mode = models.BooleanField(default=False)
+    site_stage = models.BooleanField(default=1)
 
-    def __unicode__(self):
-        return str(self.stage)
+    def __str__(self):
+        return "Site Configuration"
 
     class Meta:
-        verbose_name = "OMP Stage"
+        verbose_name = "Site Configuration"
 
 
 class Category(models.Model):
@@ -34,9 +36,9 @@ class Category(models.Model):
 class Project(models.Model):
     name = models.CharField(max_length=128)
     description = models.CharField(max_length=500)
-    softeng = models.BooleanField(default=False)
+    softEng = models.BooleanField(default=False)
     category = models.ForeignKey(Category, default="None")
-    supervisor =  models.CharField(max_length=32)
+    supervisor = models.CharField(max_length=32)
     slug = models.SlugField(unique=True)
 
     def save(self, *args, **kwargs):
@@ -53,7 +55,7 @@ class Project(models.Model):
 class Student(models.Model):
     user = models.ForeignKey(User)
     id = models.CharField(max_length=20, primary_key=True)
-    softeng = models.BooleanField(default=False)
+    softEng = models.BooleanField(default=False)
     project = models.ForeignKey(Project, default='None', related_name='assigned_project', null=True)
     category = models.ForeignKey(Category)
     favourites = models.ManyToManyField(Project, blank=True, related_name='favourite_projects')
@@ -90,7 +92,6 @@ class Supervisor(models.Model):
 
 class Administrator(models.Model):
     user = models.ForeignKey(User)
-    adid = models.CharField(max_length=20, primary_key=True)
 
     def __str__(self):
         return self.id

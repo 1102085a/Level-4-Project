@@ -4,9 +4,10 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 from omp.forms import CategoryForm, ProjectForm
 from omp.models import User, Project, Category, Student, Supervisor, Administrator, PrefListEntry
+from config.models import Config
 
 
-#permission = ''
+stage = Config.objects.get()
 
 
 def home(request):
@@ -150,15 +151,16 @@ def project(request, category_name_slug, project_name_slug):
             if not p.softeng and s.softeng:
                 error = "You must select software engineering projects."
             else:
-                preflist = PrefListEntry.objects.filter(student__id=username).order_by('rank')
-                if preflist.len() == 5:
+                prefList = PrefListEntry.objects.filter(student__id=username).order_by('rank')
+                if prefList.len() == 5:
                     error = "You already have five projects preferred. Please delete one from the dashboard."
                 else:
-                    for p in preflist:
-                        if pref == preflist.rank:
+                    for p in prefList:
+                        if pref == prefList.rank:
                             error = "Project already at this rank, please select a different ranking."
-                    #else:
-                        #checkSupervisors(preflist, project)
+                    else:
+                        if not checkSupervisors(prefList, p):
+                            error = "You already have too many projects under this supervisor."
                 p = PrefListEntry(project=p, student=s, rank=pref)
                 p.save()
                 confirmation = "Project saved to preferences at " + pref + "."
@@ -189,15 +191,17 @@ def project(request, category_name_slug, project_name_slug):
     # Render and send back response
     return render(request, 'omp/project.html', context=context_dict)
 
-'''
+
 def checkSupervisors(prefList, proj):
-    supervisor = Supervisor.objects.filter(project=proj)
+    supervisor = proj.supervisor
     count = 0
     for pref in prefList:
-        if supervisor.
+        if pref.project.supervisor == supervisor:
+            count += 1
+    if count > 2:
+        return False
+    return True
 
-    return None
-'''
 
 @login_required(login_url="/omp/login/")
 def add_category(request):

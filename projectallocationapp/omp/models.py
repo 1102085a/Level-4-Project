@@ -2,10 +2,9 @@ from __future__ import unicode_literals
 from django.template.defaultfilters import slugify
 from django.db import models
 from django.contrib.auth.models import User
-from solo.models import SingletonModel
 
 
-class SiteConfiguration(SingletonModel):
+class SiteConfiguration(models.Model):
     site_name = models.CharField(max_length=255, default='Optimal Matching Portal')
     maintenance_mode = models.BooleanField(default=False)
     site_stage = models.BooleanField(default=1)
@@ -18,8 +17,7 @@ class SiteConfiguration(SingletonModel):
 
 
 class Category(models.Model):
-    id = models.CharField(max_length=10, unique=True, primary_key=True)
-    name = models.CharField(max_length=128, unique=True)
+    name = models.CharField(max_length=128, unique=True, help_text="Category Name:")
     slug = models.SlugField(unique=True)
 
     def save(self, *args, **kwargs):
@@ -33,12 +31,21 @@ class Category(models.Model):
         return self.name
 
 
+class Supervisor(models.Model):
+    user = models.ForeignKey(User)
+    category = models.ManyToManyField(Category)
+    capacity = models.IntegerField(default=1)
+
+    def __str__(self):
+        return self.id
+
+
 class Project(models.Model):
     name = models.CharField(max_length=128)
-    description = models.CharField(max_length=500)
+    description = models.TextField(max_length=500)
     softEng = models.BooleanField(default=False)
     category = models.ForeignKey(Category, default="None")
-    supervisor = models.CharField(max_length=32)
+    supervisor = models.ForeignKey(Supervisor, null=False)
     slug = models.SlugField(unique=True)
 
     def save(self, *args, **kwargs):
@@ -54,7 +61,6 @@ class Project(models.Model):
 
 class Student(models.Model):
     user = models.ForeignKey(User)
-    id = models.CharField(max_length=20, primary_key=True)
     softEng = models.BooleanField(default=False)
     project = models.ForeignKey(Project, default='None', related_name='assigned_project', null=True)
     category = models.ForeignKey(Category)
@@ -79,22 +85,11 @@ class PrefListEntry(models.Model):
         return name
 
 
-class Supervisor(models.Model):
-    user = models.ForeignKey(User)
-    id = models.CharField(max_length=20, primary_key=True)
-    project = models.ForeignKey(Project)
-    category = models.ManyToManyField(Category)
-    capacity = models.IntegerField()
-
-    def __str__(self):
-        return self.id
-
-
 class Administrator(models.Model):
     user = models.ForeignKey(User)
 
     def __str__(self):
-        return self.id
+        return self.user.name
 
 
 

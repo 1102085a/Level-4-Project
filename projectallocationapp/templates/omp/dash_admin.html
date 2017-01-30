@@ -6,13 +6,13 @@
 
 {% block content %}
 
-        <p>This is your dashboard, {{ user.name }}! You are logged in as an admin.</p>
-        <p>Go to the <a href="/omp/">homepage!</a></p>
+<div class="w3-container">
+<h5>User: {{ user.username }}
+    Current Stage: {{ stage }}
+    <input type="Prev" name="Previous"/><input type="Next" name="Next"/>
+</h5>
 
-        <p>There is a list of categories <a href="/omp/dash/categories/">here</a></p>
+</div>
 
-        <p>Try <a href="/omp/dash/addcategories/">adding</a> one!</p>
-
-        <p>You can <a href="/omp/logout/">logout </a>here.</p>
 
 {% endblock %}

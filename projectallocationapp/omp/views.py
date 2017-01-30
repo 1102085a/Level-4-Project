@@ -3,11 +3,7 @@ from django.shortcuts import render, render_to_response
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 from omp.forms import CategoryForm, ProjectForm
-from omp.models import User, Project, Category, Student, Supervisor, Administrator, PrefListEntry
-from config.models import Config
-
-
-stage = Config.objects.get()
+from omp.models import User, Project, Category, Student, Supervisor, Administrator, PrefListEntry, SiteConfiguration
 
 
 def home(request):
@@ -43,7 +39,7 @@ def user_login(request):
                 if admin is not None:
                     request.session['permission'] = "Administrator"
 
-            urlresponse = '/omp/dashboard/' + username
+            urlresponse = '/omp/' + username + '/dashboard/'
             return HttpResponseRedirect(urlresponse)
 
         else:
@@ -67,6 +63,7 @@ def user_logout(request):
 def dashboard(request, username):
     permission = request.session['permission']  # get user permission from session
     context_dict = {}
+    context_dict['stage'] = SiteConfiguration.site_stage
     context_dict['error_message'] = ""
     user = request.user
     usertype = getuserobject(username, request)  # get user object for permission
@@ -102,11 +99,6 @@ def getuserobject(username, request):
         return Supervisor.objects.get(pk=username)
     if permission == "Administrator":
         return Administrator.objects.get(pk=username)
-
-
-@login_required(login_url="/omp/login/")
-def adminpanel(request):
-    return HttpResponse("This is for admins only! Go <a href='/omp/'>back!</a>")
 
 
 @login_required(login_url="/omp/login/")
@@ -216,25 +208,52 @@ def add_category(request):
             form.save(commit=True)
             # redirect to dashboard after adding category
             return dashboard(request)
-        else:
-            # The supplied form contained errors -
-            # just print them to the terminal.
-            print(form.errors)
+
     # Will handle the bad form, new form, or no form supplied cases.
     # Render the form with error messages (if any).
-    return render(request, 'omp/add_category.html', {'form': form})
+    return render(request, 'omp/add_category.html', {'form': form, 'form_errors': form.errors})
 
 
 @login_required(login_url="/omp/login/")
 def add_project(request):
     form = ProjectForm
 
+    # HTTP POST?
     if request.method == 'POST':
         form = ProjectForm(request.POST)
+        # Have we been provided with a valid form?
         if form.is_valid():
+            # Save to database
             form.save(commit=True)
-            return HttpResponseRedirect('omp/dashboard')
-        else:
-            print(form.errors)
-    return render(request, 'omp/add_project.html', {'form': form})
+            # Redirect to dashboard
+            return dashboard(request)
+
+    return render(request, 'omp/add_project.html', {'form': form, 'form_errors': form.errors})
+
+
+@login_required(login_url="/omp/login/")
+def supervisor_list(request):
+    return None
+
+
+@login_required(login_url="/omp/login/")
+def student_list(request):
+    return None
+
+
+@login_required(login_url="/omp/login/")
+def project_list(request):
+    return None
+
+
+@login_required(login_url="/omp/login/")
+def category_list(request):
+    return None
+
+
+@login_required(login_url="/omp/login/")
+def preference_list(request):
+    return None
+
+
 

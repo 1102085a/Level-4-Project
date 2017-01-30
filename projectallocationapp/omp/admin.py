@@ -1,8 +1,5 @@
 from django.contrib import admin
-from django.contrib.auth.models import User
-from omp.models import User, Student, Supervisor, Administrator, Category, Project, PrefListEntry
-from solo.admin import SingletonModelAdmin
-from config.models import SiteConfiguration
+from omp.models import User, Student, Supervisor, Administrator, Category, Project, PrefListEntry, SiteConfiguration
 
 
 class CategoryAdmin(admin.ModelAdmin):
@@ -26,7 +23,7 @@ admin.site.register(Category, CategoryAdmin)
 admin.site.register(Project, ProjectAdmin)
 admin.site.register(Student, StudentAdmin)
 admin.site.register(PrefListEntry)
-admin.site.register(SiteConfiguration, SingletonModelAdmin)
+admin.site.register(SiteConfiguration)
 
 
 

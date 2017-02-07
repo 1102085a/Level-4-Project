@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 class SiteConfiguration(models.Model):
     site_name = models.CharField(max_length=255, default='Optimal Matching Portal')
     maintenance_mode = models.BooleanField(default=False)
-    site_stage = models.BooleanField(default=1)
+    site_stage = models.IntegerField(default=1)
 
     def __str__(self):
         return "Site Configuration"
@@ -21,7 +21,7 @@ class Category(models.Model):
     slug = models.SlugField(unique=True)
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.id)
+        self.slug = slugify(self.name)
         super(Category, self).save(*args, **kwargs)
 
     class Meta:
@@ -32,24 +32,24 @@ class Category(models.Model):
 
 
 class Supervisor(models.Model):
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(User, models.SET_NULL, blank=True, null=True)
     category = models.ManyToManyField(Category)
     capacity = models.IntegerField(default=1)
 
     def __str__(self):
-        return self.id
+        return self.user.username
 
 
 class Project(models.Model):
     name = models.CharField(max_length=128)
     description = models.TextField(max_length=500)
     softEng = models.BooleanField(default=False)
-    category = models.ForeignKey(Category, default="None")
-    supervisor = models.ForeignKey(Supervisor, null=False)
+    category = models.ForeignKey(Category, default=None)
+    supervisor = models.ForeignKey(Supervisor, blank=True, null=True)
     slug = models.SlugField(unique=True)
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.id)
+        self.slug = slugify(self.name)
         super(Project, self).save(*args, **kwargs)
 
     class Meta:
@@ -62,14 +62,14 @@ class Project(models.Model):
 class Student(models.Model):
     user = models.ForeignKey(User)
     softEng = models.BooleanField(default=False)
-    project = models.ForeignKey(Project, default='None', related_name='assigned_project', null=True)
+    project = models.ForeignKey(Project, default='None', related_name='assigned_project', null=True, blank=True)
     category = models.ForeignKey(Category)
     favourites = models.ManyToManyField(Project, blank=True, related_name='favourite_projects')
     preference_list = models.ManyToManyField(Project, blank=True, through='PrefListEntry',
                                              related_name='ranked_projects')
 
     def __str__(self):
-        return self.id
+        return self.user.username
 
 
 class PrefListEntry(models.Model):
@@ -81,7 +81,7 @@ class PrefListEntry(models.Model):
         verbose_name_plural = 'Preference Lists'
 
     def __str__(self):
-        name = str(self.student.id) + " pref " + str(self.rank)
+        name = str(self.student.user.username) + " - Rank: " + str(self.rank)
         return name
 
 
@@ -89,7 +89,7 @@ class Administrator(models.Model):
     user = models.ForeignKey(User)
 
     def __str__(self):
-        return self.user.name
+        return self.user.username
 
 
 

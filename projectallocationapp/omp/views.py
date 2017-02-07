@@ -24,18 +24,18 @@ def user_login(request):
         usertype = request.POST.get('permission', None)
         user = authenticate(username=username, password=password)
         request.session['username'] = username  # store username for session
-        if user: # user exists
+        if user:  # user exists
             login(request, user)
             if usertype == "Student":
-                student = Student.objects.get(pk=username)
+                student = Student.objects.get(user=user)
                 if student is not None:
                     request.session['permission'] = "Student"
             elif usertype == "Supervisor":
-                supervisor = Supervisor.objects.get(pk=username)
+                supervisor = Supervisor.objects.get(user=user)
                 if supervisor is not None:
                     request.session['permission'] = "Supervisor"
             elif usertype == "Administrator":
-                admin = Administrator.objects.get(pk=username)
+                admin = Administrator.objects.get(user=user)
                 if admin is not None:
                     request.session['permission'] = "Administrator"
 
@@ -63,10 +63,11 @@ def user_logout(request):
 def dashboard(request, username):
     permission = request.session['permission']  # get user permission from session
     context_dict = {}
-    context_dict['stage'] = SiteConfiguration.site_stage
+    sc = SiteConfiguration.objects.get()
+    context_dict['stage'] = sc.site_stage
     context_dict['error_message'] = ""
     user = request.user
-    usertype = getuserobject(username, request)  # get user object for permission
+    usertype = getuserobject(request)  # get user object for permission
     context_dict['user'] = user
 
     # check user permission
@@ -91,14 +92,14 @@ def dashboard(request, username):
 
 
 # checks user permission and retrieves appropriate object
-def getuserobject(username, request):
+def getuserobject(request):
     permission = request.session['permission']
     if permission == "Student":
-        return Student.objects.get(pk=username)
+        return Student.objects.get(user=request.user)
     if permission == "Supervisor":
-        return Supervisor.objects.get(pk=username)
+        return Supervisor.objects.get(user=request.user)
     if permission == "Administrator":
-        return Administrator.objects.get(pk=username)
+        return Administrator.objects.get(user=request.user)
 
 
 @login_required(login_url="/omp/login/")

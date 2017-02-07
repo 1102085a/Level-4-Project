@@ -74,7 +74,7 @@ def dashboard(request, username):
     if permission == "Student":
         context_dict['student'] = usertype
         try:
-            student_preferences = PrefListEntry.objects.filter(student__id=username).order_by('rank')
+            student_preferences = PrefListEntry.objects.filter(student__user=user).order_by('rank')
             context_dict['preferences'] = student_preferences
         except PrefListEntry.DoesNotExist:
             context_dict['preferences'] = None

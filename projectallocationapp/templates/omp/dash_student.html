@@ -2,7 +2,15 @@
 
 {% extends 'omp/base.html' %}
 
+{% load staticfiles %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/navbar.css' %}" />
+
 {% block title %} OMP Dashboard {% endblock %}
+
+{% block navbar %}
+<li id="logout"><h1>Log Out</h1></li>
+{% endblock %}
+
 
 {% block content %}
 

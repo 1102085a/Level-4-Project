@@ -2,21 +2,38 @@
 
 {% extends 'omp/base.html' %}
 
-{% block title %} OMP Categories {% endblock %}
+{% load staticfiles %}
+
+{% block title %} OMP Categories {{ category.name }} {% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/category.css' %}" />
+{% endblock %}
+
+{% block navbar %}
+<li id="navoptions" style="float:right;font-size:12px"><h2>Log Out</h2> <h2>Dashboard</h2></li>
+{% endblock %}
 
 {% block content %}
 
     <div>
     {% if category %}
-        <h1>{{ category.name }}</h1>
+        <h1 style="text-align:center">{{ category.name }}</h1>
         {% if projects %}
-            <ul>
+            <Table class="center">
+                <tr>
+                    <th>Project</th>
+                    <th>Supervisor</th>
+                    <th>Software Engineering</th>
+                </tr>
             {% for project in projects %}
-            <li>
-                <a href="/omp/category/{{ category.slug }}/project/{{ project.slug }}">{{ project.name }}</a>
-            </li>
+                <tr>
+                    <td><a href="/omp/category/{{ category.slug }}/project/{{ project.slug }}">{{ project.name }}</a></td>
+                    <td>{{ project.supervisor.user.username }}</td>
+        `           <td> <input type="radio" value="" checked="{{ project.softEng }}" /></td>
+                </tr>
             {% endfor %}
-            </ul>
+            </Table>
         {% else %}
             <strong>No projects currently in category.</strong>
         {% endif %}
@@ -25,6 +42,6 @@
     {% endif %}
     </div>
 
-    <p>Return to the <a href="/omp/dashboard/{{ user.username }}">dash!</a></p>
+    <p>Return to the <a href="/omp/{{ user.username }}/dashboard/">dash!</a></p>
 
 {% endblock %}

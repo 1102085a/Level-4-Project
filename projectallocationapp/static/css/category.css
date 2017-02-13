@@ -1,0 +1,41 @@
+.center {
+    margin: auto;
+    width: 60%;
+    padding: 10px;
+}
+
+#navoptions{
+    float:right;
+    font-size:12px;"
+}
+
+.header{
+    text-align:center;
+}
+
+h1{
+    font-family: 'Ubuntu', sans-serif;
+}
+
+table {
+    font-family: calibri, sans-serif;
+    border-collapse: collapse;
+    width: 40%;
+    align:center
+}
+
+th {
+    font-family: 'Ubuntu', sans-serif;
+    background-color: #003964;
+    color: #FFFFFF
+}
+
+td, th {
+    border: 1px solid #dddddd;
+    text-align: center;
+    padding: 5px;
+}
+
+tr:nth-child(even) {
+    background-color: #dddddd;
+}

@@ -1,5 +1,5 @@
 from django import forms
-from omp.models import User, Project, Category, Student, Supervisor, PrefListEntry
+from omp.models import User, Project, Category, Student, Supervisor, PrefListEntry, Administrator
 
 
 class CategoryForm(forms.ModelForm):
@@ -20,7 +20,6 @@ class ProjectForm(forms.ModelForm):
 
 
 class StudentForm(forms.ModelForm):
-    slug = forms.CharField(widget=forms.HiddenInput(), required=False)
 
     class Meta:
         model = Student
@@ -28,11 +27,17 @@ class StudentForm(forms.ModelForm):
 
 
 class SupervisorForm(forms.ModelForm):
-    slug = forms.CharField(widget=forms.HiddenInput(), required=False)
 
     class Meta:
         model = Supervisor
         fields = ['user', 'category', 'capacity']
+
+
+class AdminForm(forms.ModelForm):
+
+    class Meta:
+        model = Administrator
+        fields = ['user']
 
 
 class PreferenceForm(forms.ModelForm):

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+
+{% extends 'omp/base.html' %}
+
+{% load staticfiles %}
+
+{% block title %} Category Administration {% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/category.css' %}" />
+{% endblock %}
+
+{% block navbar %}
+<li id="navoptions" style="float:right;font-size:12px"><h2>Log Out</h2> <h2>Dashboard</h2></li>
+{% endblock %}
+
+ <h1 class="header" style="text-align:center">Project Categories</h1>
+            <Table class="center">
+                <tr>
+                    <th>Category</th>
+                </tr>
+            {% for category in categories %}
+                <tr>
+                    <td>{{ category.name }}</td>
+                </tr>
+            {% endfor %}
+            </Table>

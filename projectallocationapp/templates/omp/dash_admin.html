@@ -4,14 +4,23 @@
 
 {% block title %} OMP Dashboard {% endblock %}
 
+{% block navbar %}
+<li class="navoptions" style="float:right;font-size:10px;"><h1><a href="/omp/logout/">Log Out</a></h1></li>
+{% endblock %}
+
 {% block content %}
 
-<div class="w3-container">
+<div>
 <h5><p>User: {{ user.username }}</p>
     <p>Current Stage: {{ stage }}</p>
     <input type="Submit" value= "Previous" name="Previous"/><input type="Submit" value="Next" name="Next"/>
 </h5>
 
+    <p><a href="/omp/{{ user.username }}/admin/categories/">Edit Categories</a></p>
+    <p><a href="/omp/{{ user.username }}/admin/students/">Edit Students</a></p>
+    <p><a href="/omp/{{ user.username }}/admin/supervisors/">Edit Supervisors</a></p>
+    <p><a href="/omp/{{ user.username }}/admin/projects/">Edit Projects</a></p>
+    <p><a href="/omp/{{ user.username }}/admin/prefs/">Edit Preference Lists</a></p>
 </div>
 
 

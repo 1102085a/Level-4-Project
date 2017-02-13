@@ -9,12 +9,13 @@
     <!-- CSS -->
     <link rel="stylesheet" href="{% static 'css/base.css' %}" />
     <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+    {% block extra_css %}{% endblock %}
 </head>
 <body>
 
     <ul id="navbar">
       <li><img src="{% static 'images/UofG.png' %}" alt="University of Glasgow Logo" /></li>
-      <li><h1>Optimal Matching Portal</h1></li>
+      <li><h1 id="omp">Optimal Matching Portal</h1></li>
         {% block navbar %} {% endblock %}
     </ul>
 

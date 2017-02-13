@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, render_to_response
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
-from omp.forms import CategoryForm, ProjectForm
+from omp.forms import CategoryForm, ProjectForm, StudentForm, SupervisorForm, AdminForm, PreferenceForm
 from omp.models import User, Project, Category, Student, Supervisor, Administrator, PrefListEntry, SiteConfiguration
 
 
@@ -127,7 +127,7 @@ def category(request, category_name_slug):
 def project(request, category_name_slug, project_name_slug):
     context_dict = {}
     confirmation = ""
-    error=""
+    error = ""
 
     if request.method == 'POST':  # Get values from form fields
         username = request.session['username']
@@ -207,7 +207,7 @@ def add_category(request):
         if form.is_valid():
             # Save the new category to the database.
             form.save(commit=True)
-            # redirect to dashboard after adding category
+            # Redirect to dashboard after adding category
             return dashboard(request)
 
     # Will handle the bad form, new form, or no form supplied cases.
@@ -233,28 +233,64 @@ def add_project(request):
 
 
 @login_required(login_url="/omp/login/")
-def supervisor_list(request):
-    return None
+def add_student(request):
+    form = StudentForm
+
+    # HTTP POST?
+    if request.method == 'POST':
+        form = ProjectForm(request.POST)
+        # Have we been provided with a valid form?
+        if form.is_valid():
+            # Save to database
+            form.save(commit=True)
+            # Redirect to dashboard
+            return dashboard(request)
+
+    return render(request, 'omp/add_student.html', {'form': form, 'form_errors': form.errors})
 
 
 @login_required(login_url="/omp/login/")
-def student_list(request):
-    return None
+def supervisor_list(request, username):
+
+    context_dict = {}
+    supervisors = Supervisor.objects.all().order_by('user__username')
+    context_dict["supervisors"] = supervisors
+    return render(request, 'omp/admin_supervisor.html', context=context_dict)
 
 
 @login_required(login_url="/omp/login/")
-def project_list(request):
-    return None
+def student_list(request, username):
+
+    context_dict = {}
+    students = Student.objects.all().order_by('user__username')
+    context_dict["students"] = students
+    return render(request, 'omp/admin_student.html', context=context_dict)
 
 
 @login_required(login_url="/omp/login/")
-def category_list(request):
-    return None
+def project_list(request, username):
+
+    context_dict = {}
+    projects = Project.objects.all().order_by('name')
+    context_dict["projects"] = projects
+    return render(request, 'omp/admin_project.html', context=context_dict)
 
 
 @login_required(login_url="/omp/login/")
-def preference_list(request):
-    return None
+def category_list(request, username):
 
+    context_dict = {}
+    categories = Category.objects.all().order_by('name')
+    context_dict["categories"] = categories
+    return render(request, 'omp/admin_category.html', context=context_dict)
+
+
+@login_required(login_url="/omp/login/")
+def preference_list(request, username):
+
+    context_dict = {}
+    prefs = PrefListEntry.objects.all().order_by('student__username__username')
+    context_dict["prefs"] = prefs
+    return render(request, 'omp/admin_prefs.html', context=context_dict)
 
 

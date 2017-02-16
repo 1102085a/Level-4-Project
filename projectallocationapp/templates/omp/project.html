@@ -2,41 +2,49 @@
 
 {% extends 'omp/base.html' %}
 
+{% load staticfiles %}
+
+{% block extra_css %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/project.css' %}" />
+{% endblock %}
+
 {% block title %} OMP Projects {% endblock %}
 
 {% block content %}
 
-    <div>
-        {% if project %}
-                <p>{{ project.name }}</p>
-                <P>{{ project.description }}</P>
-        {% else %}
-            <strong>This project does not exist.</strong>
+    <div class="container">
+        <div>
+            {% if project %}
+                    <p>{{ project.name }}</p>
+                    <P>{{ project.description }}</P>
+            {% else %}
+                <strong>This project does not exist.</strong>
+            {% endif %}
+        </div>
+        {% if student %}
+        <p>Add this project to favourites:</p>
+        <form method="post" action = "">{% csrf_token %}
+        <input name="Favourite" type="submit" value="Add" /></form>
+        <br>
+        {{ fave_confirm_message }}
+
+        <p>Add this project to preferences:</p>
+        <form method="post" action = "">{% csrf_token %}
+            <select name = "ranking">
+              <option value="1" selected>1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+            </select>
+        <input name = "Preferences" type="submit" value="Submit" /></form>
+        <br>
+        {{ pref_confirm_message }} {{ error_message }}
         {% endif %}
+
+
+        <p>Return to <a href="/omp/category/{{ category.slug }}">{{ category.name }}</a></p>
     </div>
-    {% if student %}
-    <p>Add this project to favourites:</p>
-    <form method="post" action = "">{% csrf_token %}
-    <input name="Favourite" type="submit" value="Add" /></form>
-    <br>
-    {{ fave_confirm_message }}
-
-    <p>Add this project to preferences:</p>
-    <form method="post" action = "">{% csrf_token %}
-        <select name = "ranking">
-          <option value="1" selected>1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
-        </select>
-    <input name = "Preferences" type="submit" value="Submit" /></form>
-    <br>
-    {{ pref_confirm_message }} {{ error_message }}
-    {% endif %}
-
-
-    <p>Return to <a href="/omp/category/{{ category.slug }}">{{ category.name }}</a></p>
 
 {% endblock %}
 

@@ -30,7 +30,11 @@
                 <tr>
                     <td><a href="/omp/category/{{ category.slug }}/project/{{ project.slug }}">{{ project.name }}</a></td>
                     <td>{{ project.supervisor.user.username }}</td>
-        `           <td> <input type="radio" value="" checked="{{ project.softEng }}" /></td>
+                    {% if project.softEng %}
+                   <td> <input type="checkbox" onclick="return false;" checked/></td>
+                    {% else %}
+                    <td> <input type="checkbox" onclick="return false;" /></td>
+                    {% endif %}
                 </tr>
             {% endfor %}
             </Table>

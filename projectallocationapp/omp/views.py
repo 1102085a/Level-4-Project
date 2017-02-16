@@ -61,6 +61,7 @@ def user_logout(request):
 
 @login_required(login_url="/omp/login/")
 def dashboard(request, username):
+
     permission = request.session['permission']  # get user permission from session
     context_dict = {}
     sc = SiteConfiguration.objects.get()
@@ -69,6 +70,16 @@ def dashboard(request, username):
     user = request.user
     usertype = getuserobject(request)  # get user object for permission
     context_dict['user'] = user
+
+    if request.method == 'POST':
+        if 'Next' in request.POST:
+            sc.site_stage += 1
+            sc.save()
+        if 'Previous' in request.POST:
+            sc.site_stage -= 1
+            sc.save()
+        context_dict['stage'] = sc.site_stage
+        return render_to_response('omp/dash_admin.html', context=context_dict)
 
     # check user permission
     if permission == "Student":
@@ -130,8 +141,8 @@ def project(request, category_name_slug, project_name_slug):
     error = ""
 
     if request.method == 'POST':  # Get values from form fields
-        username = request.session['username']
-        s = Student.objects.get(pk=username)
+        user = request.user
+        s = Student.objects.get(user=user)
         p = Project.objects.get(slug=project_name_slug)
         # check which form was submitted
         if 'Favourite' in request.POST:
@@ -140,21 +151,29 @@ def project(request, category_name_slug, project_name_slug):
             confirmation = "Project added to favourites."
             context_dict['fave_confirm_message'] = confirmation
         elif 'Preferences' in request.POST:
+            success = True
             pref = request.POST.get('ranking', None)
-            if not p.softeng and s.softeng:
+            if not p.softEng and s.softEng:
                 error = "You must select software engineering projects."
+                success = False
             else:
-                prefList = PrefListEntry.objects.filter(student__id=username).order_by('rank')
-                if prefList.len() == 5:
+                prefList = PrefListEntry.objects.filter(student__user=user).order_by('rank')
+                if len(prefList) == 5:
                     error = "You already have five projects preferred. Please delete one from the dashboard."
+                    success = False
                 else:
                     for p in prefList:
-                        if pref == prefList.rank:
+                        print(pref + " " + str(p.rank))
+                        if pref == p.rank:
                             error = "Project already at this rank, please select a different ranking."
+                            success = False
                     else:
                         if not checkSupervisors(prefList, p):
                             error = "You already have too many projects under this supervisor."
-                p = PrefListEntry(project=p, student=s, rank=pref)
+                            success = False
+
+            if success:
+                p = PrefListEntry(project=p.project, student=s, rank=pref)
                 p.save()
                 confirmation = "Project saved to preferences at " + pref + "."
 
@@ -167,7 +186,7 @@ def project(request, category_name_slug, project_name_slug):
         if 'username' not in request.session:
             request.session['username'] = user.username
         username = request.session['username']
-        student = getuserobject(username, request)
+        student = getuserobject(request)
         context_dict['user'] = user
         context_dict['student'] = student
         # Can we find a name slug with the given name?
@@ -186,7 +205,7 @@ def project(request, category_name_slug, project_name_slug):
 
 
 def checkSupervisors(prefList, proj):
-    supervisor = proj.supervisor
+    supervisor = proj.project.supervisor
     count = 0
     for pref in prefList:
         if pref.project.supervisor == supervisor:

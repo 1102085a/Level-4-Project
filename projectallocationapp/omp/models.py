@@ -35,6 +35,7 @@ class Supervisor(models.Model):
     user = models.ForeignKey(User, models.SET_NULL, blank=True, null=True)
     category = models.ManyToManyField(Category)
     capacity = models.IntegerField(default=1)
+    assigned = models.IntegerField(default=0)
 
     def __str__(self):
         return self.user.username
@@ -46,6 +47,7 @@ class Project(models.Model):
     softEng = models.BooleanField(default=False)
     category = models.ForeignKey(Category, default=None)
     supervisor = models.ForeignKey(Supervisor, blank=True, null=True)
+    assigned = models.BooleanField(default=False)
     slug = models.SlugField(unique=True)
 
     def save(self, *args, **kwargs):

@@ -11,10 +11,13 @@
 {% block content %}
 
 <div>
-<h5><p>User: {{ user.username }}</p>
-    <p>Current Stage: {{ stage }}</p>
+<h5>User: {{ user.username }}<br>
+    Current Stage: {{ stage }}
+    </h5>
+    <form action="" method="post">{% csrf_token %}
     <input type="Submit" value= "Previous" name="Previous"/><input type="Submit" value="Next" name="Next"/>
-</h5>
+    </form>
+
 
     <p><a href="/omp/{{ user.username }}/admin/categories/">Edit Categories</a></p>
     <p><a href="/omp/{{ user.username }}/admin/students/">Edit Students</a></p>

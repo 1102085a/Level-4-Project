@@ -34,7 +34,7 @@ def greedy_assignment():
 def process(student):
     studentprefs = PrefListEntry.objects.filter(Student)
     if len(studentprefs) < 5:
-        return;
+        return
     pref = studentprefs[0]
     student.project = pref.project
     student.save()

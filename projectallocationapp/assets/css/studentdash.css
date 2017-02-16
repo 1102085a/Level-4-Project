@@ -1,0 +1,99 @@
+body{
+    font-family: 'Ubuntu', sans-serif;
+}
+
+
+ul
+{
+    list-style-type: none;
+}
+
+.navoptions a:hover {
+    background-color: #3f70bf;
+}
+
+#profile {
+    align-items: center;
+    padding-top: 10px;
+    width: 100px;
+}
+
+#username {
+    margin: 5px;
+    text-align: left;
+}
+
+a {
+    text-decoration: none;
+
+}
+
+#container {
+    width: auto;
+    height: 100px;
+    clear:both;
+}
+
+#leftinfo {
+    width: 200px;
+    height: 1000px;
+    float: left;
+    border: 2px;
+    padding-left: 20px;
+    background: #4885ca;
+    font-family: 'Calibri';
+    color: white;
+}
+
+#rightinfo {
+    width: 200px;
+    height: 200px;
+    float: left;
+    margin: 10px;
+    border: 2px;
+}
+
+#preftable{
+    width: 200px;
+    height: 200px;
+    margin: 10px;
+    border: 2px;
+    float: left;
+}
+table {
+    font-family: calibri, sans-serif;
+    border-collapse: collapse;
+    width: 200%;
+}
+
+th {
+    font-family: 'Ubuntu', sans-serif;
+    background-color: #003964;
+    color: #FFFFFF
+}
+
+td, th {
+    border: 1px solid #dddddd;
+    text-align: center;
+    padding: 5px;
+}
+
+tr:nth-child(even) {
+    background-color: #dddddd;
+}
+
+input[type=submit] {
+    background-color: #003964;
+    border: none;
+    color: white;
+    padding: 3px 10px;
+    text-decoration: none;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+
+input[type=submit]:hover {
+    background-color: #98bbe2;
+    color: black;
+}
+

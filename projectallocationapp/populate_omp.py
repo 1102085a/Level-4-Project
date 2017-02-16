@@ -14,7 +14,7 @@ def populate():
     # add users
     # username, password, email(optional)
     a = add_user("JohnSmith", "wingdings")
-    b = add_user("Richard Spencer", "batman")
+    b = add_user("RichardSpencer", "batman")
     c = add_user("JackDee", "fishnchips")
     d = add_user("BobDylan", "superman")
     e = add_user("RobertSmith", "alligator")
@@ -68,7 +68,6 @@ def populate():
     cats["Level 3"]["projects"] = level_3
     cats["Level 4"]["projects"] = level_4
 
-
     # students
     # user, softEng, category,
 
@@ -85,10 +84,11 @@ def populate():
 
     # store projects for preflists in list
     projectlist = []
+    count = 0
 
     for cat, cat_data in cats.items():
-        count = 0
         c = categories[count]
+        count += 1
         for p in cat_data["projects"]:
             p = add_project(c, p["name"], p["description"], p["softEng"], p["supervisor"])
             projectlist.append(p)
@@ -100,12 +100,12 @@ def populate():
 
     # student preference lists
     # user, project, ranking
-    add_preflist(sa, projectlist[4], 1)
-    add_preflist(sa, projectlist[6], 2)
+    add_preflist(sa, projectlist[2], 1)
+    add_preflist(sa, projectlist[3], 2)
     add_preflist(sb, projectlist[3], 1)
-    add_preflist(sc, projectlist[2], 1)
-    add_preflist(sc, projectlist[3], 2)
-    add_preflist(sc, projectlist[1], 3)
+    add_preflist(sc, projectlist[4], 1)
+    add_preflist(sc, projectlist[5], 2)
+    add_preflist(sc, projectlist[6], 3)
 
 
 def add_user(name, password):

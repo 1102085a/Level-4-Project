@@ -8,28 +8,48 @@
 <link rel="stylesheet" type="text/css" href="{% static 'css/project.css' %}" />
 {% endblock %}
 
+{% block navbar %}
+<li id="navoptions"><h2><a href="/omp/logout/">Log Out</a></h2></li>
+<li id="navoptions"><h2><a href="/omp/{{ user.username }}/dashboard">Dashboard</a></h2></li>
+{% endblock %}
+
 {% block title %} OMP Projects {% endblock %}
 
 {% block content %}
 
-    <div class="container">
-        <div>
+    <div id="container">
+        <div id ="leftinfo">
+            <img id="profile" src="{% static 'images/profile-pictures.png' %}" alt="Profile Image"/>
+            <p id="username">{{ user.username }}</p>
+            {% if student %}
+                <p>Permission: Student</p>
+                <p>Project: {{ student.project.name }}</p>
+                <p>View projects in: <a href="/omp/category/{{ student.category.slug }}">{{ student.category.name }}</a></p>
+            {% endif %}
+
+        </div>
+        <div id = "projectinfo">
             {% if project %}
                     <p>{{ project.name }}</p>
-                    <P>{{ project.description }}</P>
+                    <p>{{ project.description }}</p>
+                    {% if project.softEng %}
+                         <p>Software Engineering: Yes</p>
+                    {% else %}
+                        <<p>Software Engineering: No</p>
+                    {% endif %}
             {% else %}
                 <strong>This project does not exist.</strong>
             {% endif %}
-        </div>
-        {% if student %}
-        <p>Add this project to favourites:</p>
-        <form method="post" action = "">{% csrf_token %}
-        <input name="Favourite" type="submit" value="Add" /></form>
-        <br>
-        {{ fave_confirm_message }}
 
-        <p>Add this project to preferences:</p>
+            <p>_____________________________</p>
+        {% if student %}
         <form method="post" action = "">{% csrf_token %}
+        <input name="Favourite" type="submit" value="Add to Favourites" /></form>
+        <br>
+
+
+        <form method="post" action = "">{% csrf_token %}
+            <input name = "Preferences" type="submit" value="Add Preference" />
             <select name = "ranking">
               <option value="1" selected>1</option>
               <option value="2">2</option>
@@ -37,13 +57,11 @@
               <option value="4">4</option>
               <option value="5">5</option>
             </select>
-        <input name = "Preferences" type="submit" value="Submit" /></form>
+        </form>
         <br>
-        {{ pref_confirm_message }} {{ error_message }}
+        {{ pref_confirm_message }} {{ fave_confirm_message }} {{ error_message }}
         {% endif %}
-
-
-        <p>Return to <a href="/omp/category/{{ category.slug }}">{{ category.name }}</a></p>
+        </div>
     </div>
 
 {% endblock %}

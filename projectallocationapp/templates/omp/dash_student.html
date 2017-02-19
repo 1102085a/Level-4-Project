@@ -11,7 +11,7 @@
 {% endblock %}
 
 {% block navbar %}
-<li class="navoptions" style="float:right;font-size:10px;"><h1><a href="/omp/logout/">Log Out</a></h1></li>
+<li id="navoptions"><h1><a href="/omp/logout/">Log Out</a></h1></li>
 {% endblock %}
 
 
@@ -22,12 +22,22 @@
             <img id="profile" src="{% static 'images/profile-pictures.png' %}" alt="Profile Image"/>
             <p id="username">{{ user.username }}</p>
             <p>Permission: Student</p>
+            {% if student.project.name = "Dummy project" %}
+                <p>Project: None Assigned</p>
+            {% else %}
+                <p>Project: {{ student.project.name }}</p>
+            {% endif %}
+            {% if student.softEng %}
+                <p>Software Engineer: Yes</p>
+            {% else %}
+                <p>Software Engineer: No</p>
+            {% endif %}
 
         <p>View projects in: <a href="/omp/category/{{ student.category.slug }}">{{ student.category.name }}</a></p>
         </div>
         <div id = "rightinfo">
              {% if student.favourites %}
-            <p>Favourite projects:</p>
+            <p>Favourite projects</p>
             <ul>
             {% for project in student.favourites.all %}
                 <li>
@@ -59,12 +69,13 @@
                         </td>
                         <td>
                             <form method="post" action = "">{% csrf_token %}
-                                <input name="Delete" type="submit" value="Delete" />
+                                <input name="Delete" type="submit" value="Delete {{ pref.rank }}" />
                             </form>
                         </td>
                     </tr>
                 {% endfor %}
                 </table>
+                <p>{{ delete_message }}</p>
             {% else %}
                 <p>You don't have any ranked projects.</p>
             {% endif %}

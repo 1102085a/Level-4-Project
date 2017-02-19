@@ -2,27 +2,61 @@
 
 {% extends 'omp/base.html' %}
 
+{% load staticfiles %}
+
 {% block title %} OMP Dashboard {% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/supervisordash.css' %}" />
+{% endblock %}
+
+{% block navbar %}
+<li id="navoptions"><h1><a href="/omp/logout/">Log Out</a></h1></li>
+{% endblock %}
 
 {% block content %}
 
-    <p>This is your dashboard, {{ user.username }}! You are logged in as a supervisor.</p>
-
-    <p>
-    {% if categories %}
-        <p>You are subscribed to:</p>
-        <ul>
-            {% for category in categories %}
-            <li>
-                <a href="/omp/category/{{ category.slug }}">{{ category.name }}</a>
-            </li>
+    <div id = "container">
+        <div id ="leftinfo">
+            <img id="profile" src="{% static 'images/profile-pictures.png' %}" alt="Profile Image"/>
+            <p id="username">{{ user.username }}</p>
+            <p>Permission: Supervisor</p>
+        <p>View projects in:</p>
+            {% for cat in categories %}
+                 <a href="/omp/category/{{ cat.slug }}">{{ cat.name }}</a>
             {% endfor %}
-        </ul>
-    {% else %}
-        <strong>You're not subscribed to any categories.</strong>
-    {% endif %}
+        </div>
+        <div id = "rightinfo">
+            <p>Options</p>
+            <a href = "/omp/add_project">Add new project</a>
+        </div>
+
+        <div id ="projecttable">
+            {% if projects %}
+                <p>Project Preferences</p>
+                <Table>
+                <tr>
+                    <th>Project</th>
+                    <th>Supervisor</th>
+                    <th>Software Engineering</th>
+                </tr>
+            {% for project in projects %}
+                <tr>
+                    <td><a href="/omp/category/{{ category.slug }}/project/{{ project.slug }}">{{ project.name }}</a></td>
+                    <td>{{ project.supervisor.user.username }}</td>
+                    {% if project.softEng %}
+                   <td> <input type="checkbox" onclick="return false;" checked/></td>
+                    {% else %}
+                    <td> <input type="checkbox" onclick="return false;" /></td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+            </Table>
+                </table>
+            {% else %}
+                <p>You haven't submitted any projects.</p>
+            {% endif %}
+        {{ prefitem }}
+        </div>
     </div>
-
-    <p>You can <a href="/omp/logout/">logout </a>here.</p>
-
 {% endblock %}

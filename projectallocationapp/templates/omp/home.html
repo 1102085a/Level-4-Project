@@ -2,14 +2,18 @@
 
 {% extends 'omp/base.html' %}
 
+{% load staticfiles %}
+
 {% block title %} OMP Homepage {% endblock %}
 
-{% block content %}
+{% block extra_css %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/studentdash.css' %}" />
+{% endblock %}
 
-    <p>This is the OMP homepage! Take a look around!</p>
-    <br />
-    <p>It'd be nice if you <a href="/omp/login">log in first!</a></p>
-    <br />
-    {{ construction }}
+{% block navbar %}
+<li class="navoptions" style="float:right;font-size:10px;"><h1><a href="/omp/login/">Log In</a></h1></li>
+{% endblock %}
+
+{% block content %}
 
 {% endblock %}

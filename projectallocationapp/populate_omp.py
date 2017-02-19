@@ -27,7 +27,7 @@ def populate():
     dummy = add_project(dcat, "Dummy project", "A placeholder project", True, z)
 
     dummy_project = [
-        {"name": "Dummy project", "description": "Dummy project", "softEng": True,
+        {"name": "Dummy Project", "description": "Dummy Project", "softEng": True,
             "supervisor": z}
     ]
 

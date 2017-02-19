@@ -51,12 +51,12 @@ def user_login(request):
             else:  # username doesn't exist
                 error_message = "Username {0} not recognised".format(username)
 
-    return render(request, 'omp/login.html', {'login_message' : error_message})
+    return render(request, 'omp/login.html', {'login_message': error_message})
 
 
 def user_logout(request):
     logout(request)
-    return render_to_response('omp/logout.html')
+    return render_to_response('omp/home.html')
 
 
 @login_required(login_url="/omp/login/")
@@ -67,6 +67,7 @@ def dashboard(request, username):
     sc = SiteConfiguration.objects.get()
     context_dict['stage'] = sc.site_stage
     context_dict['error_message'] = ""
+    context_dict['delete_message'] = ""
     user = request.user
     usertype = getuserobject(request)  # get user object for permission
     context_dict['user'] = user
@@ -75,11 +76,21 @@ def dashboard(request, username):
         if 'Next' in request.POST:
             sc.site_stage += 1
             sc.save()
-        if 'Previous' in request.POST:
+            context_dict['stage'] = sc.site_stage
+            return render(request, 'omp/dash_admin.html', context=context_dict)
+        elif 'Previous' in request.POST:
             sc.site_stage -= 1
             sc.save()
-        context_dict['stage'] = sc.site_stage
-        return render_to_response('omp/dash_admin.html', context=context_dict)
+            context_dict['stage'] = sc.site_stage
+            return render(request, 'omp/dash_admin.html', context=context_dict)
+        if 'Delete' in request.POST:
+            pref = request.POST.get('Delete', None)
+            prefnum = pref[-1:]
+            PrefListEntry.objects.get(student=usertype, rank=prefnum).delete()
+            context_dict['delete_message'] = "Preference " + prefnum + " deleted"
+            return render(request, 'omp/dash_student.html', context=context_dict)
+
+
 
     # check user permission
     if permission == "Student":
@@ -89,15 +100,17 @@ def dashboard(request, username):
             context_dict['preferences'] = student_preferences
         except PrefListEntry.DoesNotExist:
             context_dict['preferences'] = None
-        return render_to_response('omp/dash_student.html', context=context_dict)
+        return render(request, 'omp/dash_student.html', context=context_dict)
     if permission == "Supervisor":
         category_list = usertype.category.all()
+        super_projects = Project.objects.filter(supervisor=usertype)
         context_dict['supervisor'] = usertype
         context_dict['categories'] = category_list
-        return render_to_response('omp/dash_supervisor.html', context=context_dict)
+        context_dict['projects'] = super_projects
+        return render(request, 'omp/dash_supervisor.html', context=context_dict)
     if permission == "Administrator":
         context_dict['admin'] = usertype
-        return render_to_response('omp/dash_admin.html', context=context_dict)
+        return render(request, 'omp/dash_admin.html', context=context_dict)
     else:
         return HttpResponseRedirect('/omp/login')
 
@@ -120,6 +133,10 @@ def category(request, category_name_slug):
     try:
         user = request.user
         context_dict['user'] = user
+
+        permission = request.session['permission'].lower()
+        usertype = getuserobject(request)
+        context_dict[permission] = usertype
 
         category = Category.objects.get(slug=category_name_slug)
         projects = Project.objects.filter(category=category)
@@ -162,18 +179,21 @@ def project(request, category_name_slug, project_name_slug):
                     error = "You already have five projects preferred. Please delete one from the dashboard."
                     success = False
                 else:
-                    for p in prefList:
-                        print(pref + " " + str(p.rank))
-                        if pref == p.rank:
+                    for proj in prefList:
+                        if p.name == proj.project.name:
+                            error = "You already have this project in your preferences."
+                            success = False
+                        print(pref + " " + str(proj.rank))
+                        if int(pref) == int(proj.rank):
                             error = "Project already at this rank, please select a different ranking."
                             success = False
                     else:
-                        if not checkSupervisors(prefList, p):
+                        if not checkSupervisors(prefList, proj):
                             error = "You already have too many projects under this supervisor."
                             success = False
-
+            print(success)
             if success:
-                p = PrefListEntry(project=p.project, student=s, rank=pref)
+                p = PrefListEntry(project=p, student=s, rank=pref)
                 p.save()
                 confirmation = "Project saved to preferences at " + pref + "."
 
@@ -217,7 +237,14 @@ def checkSupervisors(prefList, proj):
 
 @login_required(login_url="/omp/login/")
 def add_category(request):
+    context_dict = {}
     form = CategoryForm
+    context_dict['form'] = form
+    context_dict['form_errors'] = form.errors
+
+    # get user info
+    user = request.user
+    context_dict['user'] = user
 
     # A HTTP POST?
     if request.method == 'POST':
@@ -231,12 +258,26 @@ def add_category(request):
 
     # Will handle the bad form, new form, or no form supplied cases.
     # Render the form with error messages (if any).
-    return render(request, 'omp/add_category.html', {'form': form, 'form_errors': form.errors})
+    return render(request, 'omp/add_generic.html', context=context_dict)
 
 
 @login_required(login_url="/omp/login/")
 def add_project(request):
+    context_dict = {}
     form = ProjectForm
+    context_dict['form'] = form
+    context_dict['form_errors'] = form.errors
+
+    # get user info
+    user = request.user
+    context_dict['user'] = user
+
+    permission = request.session['permission'].lower()
+    usertype = getuserobject(request)
+    context_dict[permission] = usertype
+    if permission == "supervisor":
+        category_list = usertype.category.all()
+        context_dict['categories'] = category_list
 
     # HTTP POST?
     if request.method == 'POST':
@@ -248,12 +289,23 @@ def add_project(request):
             # Redirect to dashboard
             return dashboard(request)
 
-    return render(request, 'omp/add_project.html', {'form': form, 'form_errors': form.errors})
+    return render(request, 'omp/add_project.html', context=context_dict)
 
 
 @login_required(login_url="/omp/login/")
 def add_student(request):
+    context_dict = {}
     form = StudentForm
+    context_dict['form'] = form
+    context_dict['form_errors'] = form.errors
+
+    # get user info
+    user = request.user
+    context_dict['user'] = user
+
+    permission = request.session['permission'].lower()
+    usertype = getuserobject(request)
+    context_dict[permission] = usertype
 
     # HTTP POST?
     if request.method == 'POST':
@@ -263,15 +315,17 @@ def add_student(request):
             # Save to database
             form.save(commit=True)
             # Redirect to dashboard
-            return dashboard(request)
+            return dashboard(request, user.username)
 
-    return render(request, 'omp/add_student.html', {'form': form, 'form_errors': form.errors})
+    return render(request, 'omp/add_student.html', context=context_dict)
 
 
 @login_required(login_url="/omp/login/")
 def supervisor_list(request, username):
 
     context_dict = {}
+    sc = SiteConfiguration.objects.get()
+    context_dict['stage'] = sc.site_stage
     supervisors = Supervisor.objects.all().order_by('user__username')
     context_dict["supervisors"] = supervisors
     return render(request, 'omp/admin_supervisor.html', context=context_dict)
@@ -281,6 +335,8 @@ def supervisor_list(request, username):
 def student_list(request, username):
 
     context_dict = {}
+    sc = SiteConfiguration.objects.get()
+    context_dict['stage'] = sc.site_stage
     students = Student.objects.all().order_by('user__username')
     context_dict["students"] = students
     return render(request, 'omp/admin_student.html', context=context_dict)
@@ -290,6 +346,8 @@ def student_list(request, username):
 def project_list(request, username):
 
     context_dict = {}
+    sc = SiteConfiguration.objects.get()
+    context_dict['stage'] = sc.site_stage
     projects = Project.objects.all().order_by('name')
     context_dict["projects"] = projects
     return render(request, 'omp/admin_project.html', context=context_dict)
@@ -299,6 +357,8 @@ def project_list(request, username):
 def category_list(request, username):
 
     context_dict = {}
+    sc = SiteConfiguration.objects.get()
+    context_dict['stage'] = sc.site_stage
     categories = Category.objects.all().order_by('name')
     context_dict["categories"] = categories
     return render(request, 'omp/admin_category.html', context=context_dict)
@@ -308,8 +368,47 @@ def category_list(request, username):
 def preference_list(request, username):
 
     context_dict = {}
+    sc = SiteConfiguration.objects.get()
+    context_dict['stage'] = sc.site_stage
     prefs = PrefListEntry.objects.all().order_by('student__username__username')
     context_dict["prefs"] = prefs
     return render(request, 'omp/admin_prefs.html', context=context_dict)
+
+
+@login_required(login_url="/omp/login/")
+def edit_category(request, category_name_slug):
+    context_dict = {}
+    context_dict['confirm_message'] = ""
+
+    try:
+        user = request.user
+        context_dict['user'] = user
+
+        permission = request.session['permission'].lower()
+        usertype = getuserobject(request)
+        context_dict[permission] = usertype
+
+        category = Category.objects.get(slug=category_name_slug)
+
+        form = CategoryForm(initial={'name': category.name})
+
+        context_dict['form'] = form
+        context_dict['form_errors'] = form.errors
+
+    except Category.DoesNotExist:
+        context_dict['projects'] = None
+        context_dict['category'] = None
+
+        # A HTTP POST?
+        if request.method == 'POST':
+            form = CategoryForm(request.POST)
+            if form.is_valid():
+                form.save(commit=True)
+                context_dict['confirm_message'] = "Category Saved."
+            return render(request, 'omp/edit_category.html', context=context_dict)
+
+    return render(request, 'omp/edit_category.html', context=context_dict)
+
+
 
 

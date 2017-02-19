@@ -14,7 +14,18 @@
 <li id="navoptions" style="float:right;font-size:12px"><h2>Log Out</h2> <h2>Dashboard</h2></li>
 {% endblock %}
 
- <h1 class="header" style="text-align:center">Project Categories</h1>
+<div id = "container">
+        <div id ="leftinfo">
+            <img id="profile" src="{% static 'images/profile-pictures.png' %}" alt="Profile Image"/>
+            <p id="username">{{ user.username }}</p>
+            <p>Permission: Administrator</p>
+            <p>Current Stage: {{ stage }}</p>
+            <form action="" method="post">{% csrf_token %}
+            <input type="Submit" value= "Previous" name="Previous"/><input type="Submit" value="Next" name="Next"/>
+    </form>
+        </div>
+    <div id = "rightinfo">
+    <h2 class="header" style="text-align:center">Project Categories</h2>
             <Table class="center">
                 <tr>
                     <th>Category</th>
@@ -25,3 +36,5 @@
                 </tr>
             {% endfor %}
             </Table>
+    </div>
+</div>

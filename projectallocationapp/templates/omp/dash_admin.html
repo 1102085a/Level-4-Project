@@ -2,28 +2,49 @@
 
 {% extends 'omp/base.html' %}
 
+{% load staticfiles %}
+
 {% block title %} OMP Dashboard {% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/admindash.css' %}" />
+{% endblock %}
+
 {% block navbar %}
-<li class="navoptions" style="float:right;font-size:10px;"><h1><a href="/omp/logout/">Log Out</a></h1></li>
+<li id="navoptions" style="float:right;font-size:10px;"><h1><a href="/omp/logout/">Log Out</a></h1></li>
 {% endblock %}
 
 {% block content %}
 
-<div>
-<h5>User: {{ user.username }}<br>
-    Current Stage: {{ stage }}
-    </h5>
-    <form action="" method="post">{% csrf_token %}
-    <input type="Submit" value= "Previous" name="Previous"/><input type="Submit" value="Next" name="Next"/>
+    <div id = "container">
+        <div id ="leftinfo">
+            <img id="profile" src="{% static 'images/profile-pictures.png' %}" alt="Profile Image"/>
+            <p id="username">{{ user.username }}</p>
+            <p>Permission: Administrator</p>
+            <p>Current Stage: {{ stage }}</p>
+            <form action="" method="post">{% csrf_token %}
+            <input type="Submit" value= "Previous" name="Previous"/><input type="Submit" value="Next" name="Next"/>
     </form>
+        </div>
+        <div id = "addoptions">
+            <p>Add items</p>
+            <p><a href="/omp/create_category">Create Category</a></p>
+            <p><a href="/omp/create_project">Create Project</a></p>
+            <p><a href="/omp/create_student">Create Student</a></p>
+            <p><a href="/omp/create_supervisor">Create Supervisor</a></p>
+            <p><a href="/omp/create_administrator">Create Administrator</a></p>
+            <p><a href="/omp/create_preference">Create Preference List</a></p>
+        </div>
 
+    <div id = "editoptions">
+            <p>Edit Items</p>
+            <p><a href="/omp/{{ user.username }}/admin/categories/">Edit Categories</a></p>
+            <p><a href="/omp/{{ user.username }}/admin/students/">Edit Students</a></p>
+            <p><a href="/omp/{{ user.username }}/admin/supervisors/">Edit Supervisors</a></p>
+            <p><a href="/omp/{{ user.username }}/admin/projects/">Edit Projects</a></p>
+            <p><a href="/omp/{{ user.username }}/admin/prefs/">Edit Preference Lists</a></p>
+    </div>
 
-    <p><a href="/omp/{{ user.username }}/admin/categories/">Edit Categories</a></p>
-    <p><a href="/omp/{{ user.username }}/admin/students/">Edit Students</a></p>
-    <p><a href="/omp/{{ user.username }}/admin/supervisors/">Edit Supervisors</a></p>
-    <p><a href="/omp/{{ user.username }}/admin/projects/">Edit Projects</a></p>
-    <p><a href="/omp/{{ user.username }}/admin/prefs/">Edit Preference Lists</a></p>
 </div>
 
 

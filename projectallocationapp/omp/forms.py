@@ -3,11 +3,11 @@ from omp.models import User, Project, Category, Student, Supervisor, PrefListEnt
 
 
 class CategoryForm(forms.ModelForm):
-    slug = forms.CharField(widget=forms.HiddenInput(), required=False)
 
     class Meta:
         model = Category
         fields = ['name']
+        exclude = ('slug',)
 
 
 class ProjectForm(forms.ModelForm):
@@ -16,7 +16,8 @@ class ProjectForm(forms.ModelForm):
     class Meta:
         model = Project
         fields = ['name', 'description', 'softEng', 'category', 'supervisor']
-        exclude = ('category',)
+        exclude = ('slug',)
+
 
 
 class StudentForm(forms.ModelForm):

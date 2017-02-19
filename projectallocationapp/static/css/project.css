@@ -1,10 +1,67 @@
-.container
-{
-    margin: 10px;
-    padding-left: 5px;
+#navoptions{
+    float:right;
+    font-size:12px;
+    padding: 10px
+}
 
+#navoptions a:hover {
+    background-color: #3f70bf;
+}
+
+
+/* Master Container */
+#container {
+    width: auto;
+    height: 100px;
+    clear:both;
+}
+
+/* Left panel*/
+#profile {
+    align-items: center;
+    padding-top: 10px;
+    width: 100px;
+}
+
+#username {
+    margin: 5px;
+    text-align: left;
 }
 
 p {
     font-family: 'Ubuntu', sans-serif;
+}
+
+#leftinfo {
+    width: 200px;
+    height: 1000px;
+    float: left;
+    border: 2px;
+    padding-left: 20px;
+    background: #357ae2;
+    font-family: 'Helvetica', sans-serif;
+    color: white;
+}
+
+#projectinfo {
+    float:left;
+    margin-left: 20px;
+    font-family: 'Helvetica', sans-serif;
+}
+
+/* Button Stylings */
+
+input[type=submit], select {
+    background-color: #003964;
+    border: none;
+    color: white;
+    padding: 3px 10px;
+    text-decoration: none;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+
+input[type=submit]:hover {
+    background-color: #98bbe2;
+    color: black;
 }

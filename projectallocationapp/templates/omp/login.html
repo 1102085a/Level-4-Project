@@ -2,24 +2,43 @@
 
 {% extends 'omp/base.html' %}
 {% load static%}
-{% static 'styles/css/login.css' %}
+
+{% block extra_css %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}" />
+{% endblock %}
 
 {% block content %}
-    <h1>Login</h1>
 
-    <form method="post" action = "">{% csrf_token %}
-        <label for="username">Username:</label>
-        <input type = "text" name="username" value="" id = "username">
-        <br />
-        <label for="password">Password:</label>
-        <input type = "password" name="password" value="" id = "password">
-        <br>
-        <input type="radio" name="permission" value="Student" checked>Student
-        <input type="radio" name="permission" value="Supervisor" >Supervisor
-        <input type="radio" name="permission" value="Administrator" >Administrator
-        <br>
-        <input type="submit" value="Log In" />
-        <br>
-        {{ login_message }}
-    </form>
+    <div class="container">
+        <h2>Login</h2>
+
+        <form method="post" action = "">{% csrf_token %}
+            <input type = "text" name="username" value="" id = "username" style="margin-bottom: 5px;" placeholder="Username">
+            </label>
+            <label>
+            <input type = "password" name="password" value="" id = "password" placeholder="Password">
+            </label>
+
+            <input type="submit" value="Log In" />
+
+             <div class="control-group">
+                <label class="control control--radio">Student
+                    <input type="radio" name="permission" value="Student" checked="checked"/>
+                    <div class="control__indicator"></div>
+                </label>
+                <label class="control control--radio">Supervisor
+                    <input type="radio" name="permission" value="Supervisor"/>
+                    <div class="control__indicator"></div>
+                </label>
+                <label class="control control--radio">Administrator
+                    <input type="radio" name="permission" value="Administrator"/>
+                    <div class="control__indicator"></div>
+                </label>
+            </div>
+
+            {{ login_message }}
+        </form>
+
+
+    </div>
 {% endblock %}

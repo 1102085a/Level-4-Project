@@ -40,8 +40,8 @@ a {
     float: left;
     border: 2px;
     padding-left: 20px;
-    background: #98bbe2;
-    font-family: 'calibri'
+    background: #357ae2;
+    font-family: 'Helvetica', sans-serif;
     color: white;
 }
 
@@ -60,6 +60,9 @@ a {
     border: 2px;
     float: left;
 }
+
+/* Table Stylings */
+
 table {
     font-family: calibri, sans-serif;
     border-collapse: collapse;
@@ -81,6 +84,8 @@ td, th {
 tr:nth-child(even) {
     background-color: #dddddd;
 }
+
+/* Button Stylings */
 
 input[type=submit] {
     background-color: #003964;

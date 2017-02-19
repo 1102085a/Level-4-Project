@@ -4,7 +4,7 @@ html, body
     padding: 0;
 }
 
-#navbar {
+.navbar {
     list-style-type: none;
     margin: 0;
     padding: 0;
@@ -13,17 +13,17 @@ html, body
     font-family: 'Ubuntu', sans-serif;
 }
 
-#navbar h1 {
+.navbar h1 {
     text-align: center;
     color: #ffffff;
     margin: 30px;
 }
 
-#navbar li {
+.navbar li {
     float: left;
 }
 
-#navbar li a {
+.navbar li a {
     display: block;
     color: white;
     text-align: center;
@@ -34,4 +34,8 @@ html, body
 p {
     font-family: 'Ubuntu', sans-serif;
     margin-left: 1px;
+}
+
+a {
+    text-decoration: none;
 }

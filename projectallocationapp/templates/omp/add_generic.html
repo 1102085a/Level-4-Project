@@ -15,28 +15,19 @@
 <li id="navoptions"><h2><a href="/omp/{{ user.username }}/dashboard">Dashboard</a></h2></li>
 {% endblock %}
 
-
 {% block content %}
-
     <div>
         <div id ="leftinfo">
             <img id="profile" src="{% static 'images/profile-pictures.png' %}" alt="Profile Image"/>
             <p id="username">{{ user.username }}</p>
-            {% if supervisor %}
-            <p>Permission: Supervisor</p>
-            <p>View projects in:</p>
-            {% for cat in categories %}
-                 <a href="/omp/category/{{ cat.slug }}">{{ cat.name }}</a>
-            {% endfor %}
-            {% endif %}
         </div>
 
         <div class="addform">
             <h2>New Project</h2>
-            <form id="project_form" method="post" action="">
+            <form id="model_form" method="post" action="">
                 {% csrf_token %}
                 {{ form.as_p }}
-                <input type="submit" name="submit" value="Create Project" />
+                <input type="submit" name="submit" value="Create" />
             </form>
         </div>
     </div>

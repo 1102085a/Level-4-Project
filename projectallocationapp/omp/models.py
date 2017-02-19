@@ -43,7 +43,7 @@ class Supervisor(models.Model):
 
 class Project(models.Model):
     name = models.CharField(max_length=128)
-    description = models.TextField(max_length=500)
+    description = models.TextField(max_length=1000)
     softEng = models.BooleanField(default=False)
     category = models.ForeignKey(Category, default=None)
     supervisor = models.ForeignKey(Supervisor, blank=True, null=True)

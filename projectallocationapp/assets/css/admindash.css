@@ -1,3 +1,15 @@
+body{
+    font-family: 'Ubuntu', sans-serif;
+}
+
+
+ul
+{
+    list-style-type: none;
+}
+
+/* Navbar */
+
 #navoptions{
     float:right;
     font-size:12px;
@@ -9,14 +21,6 @@
 }
 
 
-/* Master Container */
-#container {
-    width: auto;
-    height: 100px;
-    clear:both;
-}
-
-/* Left panel*/
 #profile {
     align-items: center;
     padding-top: 10px;
@@ -28,8 +32,15 @@
     text-align: left;
 }
 
-p {
-    font-family: 'Ubuntu', sans-serif;
+a {
+    text-decoration: none;
+
+}
+
+#container {
+    width: auto;
+    height: 100px;
+    clear:both;
 }
 
 #leftinfo {
@@ -43,15 +54,16 @@ p {
     color: white;
 }
 
-#projectinfo {
-    float:left;
-    margin-left: 20px;
-    font-family: 'Helvetica', sans-serif;
+#rightinfo {
+    width: 200px;
+    height: 200px;
+    float: left;
+    margin: 10px;
+    border: 2px;
+    padding-left:10px;
 }
 
-/* Button Stylings */
-
-input[type=submit], select {
+input[type=submit] {
     background-color: #003964;
     border: none;
     color: white;
@@ -59,9 +71,4 @@ input[type=submit], select {
     text-decoration: none;
     margin: 4px 2px;
     cursor: pointer;
-}
-
-input[type=submit]:hover {
-    background-color: #98bbe2;
-    color: black;
 }

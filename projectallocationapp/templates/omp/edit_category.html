@@ -4,10 +4,10 @@
 
 {% load staticfiles %}
 
-{% block title %} OMP - Add Model {% endblock %}
+{% block title %} OMP Dashboard {% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" type="text/css" href="{% static 'css/addmodel.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'css/admindash.css' %}" />
 {% endblock %}
 
 {% block navbar %}
@@ -15,30 +15,29 @@
 <li id="navoptions"><h2><a href="/omp/{{ user.username }}/dashboard">Dashboard</a></h2></li>
 {% endblock %}
 
-
 {% block content %}
 
-    <div>
+    <div id = "container">
         <div id ="leftinfo">
             <img id="profile" src="{% static 'images/profile-pictures.png' %}" alt="Profile Image"/>
             <p id="username">{{ user.username }}</p>
-            {% if supervisor %}
-            <p>Permission: Supervisor</p>
-            <p>View projects in:</p>
-            {% for cat in categories %}
-                 <a href="/omp/category/{{ cat.slug }}">{{ cat.name }}</a>
-            {% endfor %}
-            {% endif %}
+            <p>Permission: Administrator</p>
+            <p>Current Stage: {{ stage }}</p>
+            <form action="" method="post">{% csrf_token %}
+            <input type="Submit" value= "Previous" name="Previous"/><input type="Submit" value="Next" name="Next"/>
+    </form>
         </div>
-
-        <div class="addform">
-            <h2>New Project</h2>
+        <div class="editform">
+            <h2>Edit Category</h2>
             <form id="project_form" method="post" action="">
                 {% csrf_token %}
                 {{ form.as_p }}
-                <input type="submit" name="submit" value="Create Project" />
+                <input type="submit" name="submit" value="Save" />
             </form>
         </div>
-    </div>
+    <div>
+
+</div>
+
 
 {% endblock %}

@@ -1,10 +1,3 @@
-/* Table class */
-.center {
-    margin: auto;
-    width: 60%;
-    padding: 10px;
-}
-
 /* Navbar */
 #navoptions{
     float:right;
@@ -46,33 +39,24 @@
     color: white;
 }
 
-.header{
-    text-align:center;
+/* Form Stylings */
+h2{
+    margin: 0px;
+
 }
 
-h1{
-    font-family: 'Ubuntu', sans-serif;
+p {
+    display: flex;
+    padding-right: 10px;
 }
 
-table {
-    font-family: calibri, sans-serif;
-    border-collapse: collapse;
-    width: 40%;
-    align:center
+label {
+    margin-right:5px;
 }
 
-th {
-    font-family: 'Ubuntu', sans-serif;
-    background-color: #003964;
-    color: #FFFFFF
-}
-
-td, th {
-    border: 1px solid #dddddd;
-    text-align: center;
-    padding: 5px;
-}
-
-tr:nth-child(even) {
-    background-color: #dddddd;
+.addform {
+    display: block;
+    margin: 20px;
+    float: left;
+    font-family: 'Helvetica', sans-serif;
 }

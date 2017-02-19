@@ -8,9 +8,18 @@ ul
     list-style-type: none;
 }
 
-.navoptions a:hover {
+/* Navbar */
+
+#navoptions{
+    float:right;
+    font-size:12px;
+    padding: 10px
+}
+
+#navoptions a:hover {
     background-color: #3f70bf;
 }
+
 
 #profile {
     align-items: center;
@@ -21,11 +30,6 @@ ul
 #username {
     margin: 5px;
     text-align: left;
-}
-
-a {
-    text-decoration: none;
-
 }
 
 #container {
@@ -40,8 +44,8 @@ a {
     float: left;
     border: 2px;
     padding-left: 20px;
-    background: #4885ca;
-    font-family: 'Calibri';
+    background: #357ae2;
+    font-family: 'Helvetica', sans-serif;
     color: white;
 }
 
@@ -51,6 +55,7 @@ a {
     float: left;
     margin: 10px;
     border: 2px;
+    padding-left:10px;
 }
 
 #preftable{
@@ -60,6 +65,9 @@ a {
     border: 2px;
     float: left;
 }
+
+/* Table Stylings */
+
 table {
     font-family: calibri, sans-serif;
     border-collapse: collapse;
@@ -81,6 +89,8 @@ td, th {
 tr:nth-child(even) {
     background-color: #dddddd;
 }
+
+/* Button Stylings */
 
 input[type=submit] {
     background-color: #003964;

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+
+{% extends 'omp/base.html' %}
+
+{% load staticfiles %}
+
+{% block title %} OMP - Add Model {% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/addmodel.css' %}" />
+{% endblock %}
+
+{% block navbar %}
+<li id="navoptions"><h2><a href="/omp/logout/">Log Out</a></h2></li>
+<li id="navoptions"><h2><a href="/omp/{{ user.username }}/dashboard">Dashboard</a></h2></li>
+{% endblock %}
+
+
+{% block content %}
+
+    <div>
+        <div id ="leftinfo">
+            <img id="profile" src="{% static 'images/profile-pictures.png' %}" alt="Profile Image"/>
+            <p id="username">{{ user.username }}</p>
+            <p>Permission: Administrator</p>
+            {% endif %}
+        </div>
+
+        <div class="resultstable">
+            <table class = "center">
+                <tr>
+                    <th>Student</th>
+                    <th>Project</th>
+                </tr>
+                    {% for key, value in processed.items %}
+                    <tr>
+                        <td>{{key}}</td>
+                        <td>{{value}}</td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+            </table>
+        </div>
+    </div>
+
+{% endblock %}

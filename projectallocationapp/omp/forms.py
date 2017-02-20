@@ -11,7 +11,6 @@ class CategoryForm(forms.ModelForm):
 
 
 class ProjectForm(forms.ModelForm):
-    slug = forms.CharField(widget=forms.HiddenInput(), required=False)
 
     class Meta:
         model = Project

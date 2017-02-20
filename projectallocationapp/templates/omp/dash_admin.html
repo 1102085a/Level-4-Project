@@ -24,7 +24,11 @@
             <p>Current Stage: {{ stage }}</p>
             <form action="" method="post">{% csrf_token %}
             <input type="Submit" value= "Previous" name="Previous"/><input type="Submit" value="Next" name="Next"/>
-    </form>
+            {{ if stage == 4 }}
+                <input type="Submit" value= "Match" name="Match"/>
+            {{ else }}
+                <input type="Submit" value= "Match" name="Match" disabled/>
+            </form>
         </div>
         <div id = "addoptions">
             <p>Add items</p>

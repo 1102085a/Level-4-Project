@@ -17,8 +17,9 @@ General algorithm outline:
 
 '''
 
+processlist = {}
 
-def greedy_assignment():
+def greedyAssignment():
     students_list = Student.objects.all()
 
     # O(N) Random selection
@@ -29,14 +30,25 @@ def greedy_assignment():
         students_list[index] = students_list[size - 1]
         size -= 1
         process(student)
+    return processlist
 
 
 def process(student):
     studentprefs = PrefListEntry.objects.filter(Student)
     if len(studentprefs) < 5:
-        return
-    pref = studentprefs[0]
-    student.project = pref.project
-    student.save()
-    print(student.user.username + " assigned project: " + pref.project.name)
+        student.project = None
+    for pref in studentprefs:
+        project = pref.project
+        supervisor = project.supervisor
+        if project.assigned:
+            student.project = None
+        elif supervisor.capacity == supervisor.assigned:
+            student.project = None
+        else:
+            student.project = project
+            supervisor.assigned += 1
+            student.save()
+            supervisor.save()
+    processlist[student.user.username] = student.project.name
+
 

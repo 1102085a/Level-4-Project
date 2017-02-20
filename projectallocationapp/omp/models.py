@@ -17,7 +17,7 @@ class SiteConfiguration(models.Model):
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=128, unique=True, help_text="Category Name:")
+    name = models.CharField(max_length=128, unique=True)
     slug = models.SlugField(unique=True)
 
     def save(self, *args, **kwargs):

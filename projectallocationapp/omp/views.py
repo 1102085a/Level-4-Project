@@ -4,6 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 from omp.forms import CategoryForm, ProjectForm, StudentForm, SupervisorForm, AdminForm, PreferenceForm
 from omp.models import User, Project, Category, Student, Supervisor, Administrator, PrefListEntry, SiteConfiguration
+from algorithm import greedyAssignment
 
 
 def home(request):
@@ -89,8 +90,10 @@ def dashboard(request, username):
             PrefListEntry.objects.get(student=usertype, rank=prefnum).delete()
             context_dict['delete_message'] = "Preference " + prefnum + " deleted"
             return render(request, 'omp/dash_student.html', context=context_dict)
-
-
+        if 'Match' in request.POST:
+            processlist = greedyAssignment()
+            context_dict['processed'] = processlist
+            return render(request, 'omp/matchresults.html', context=context_dict)
 
     # check user permission
     if permission == "Student":
@@ -287,7 +290,7 @@ def add_project(request):
             # Save to database
             form.save(commit=True)
             # Redirect to dashboard
-            return dashboard(request)
+            return dashboard(request, user.username)
 
     return render(request, 'omp/add_project.html', context=context_dict)
 
@@ -317,7 +320,91 @@ def add_student(request):
             # Redirect to dashboard
             return dashboard(request, user.username)
 
-    return render(request, 'omp/add_student.html', context=context_dict)
+    return render(request, 'omp/add_generic.html', context=context_dict)
+
+
+@login_required(login_url="/omp/login/")
+def add_supervisor(request):
+    context_dict = {}
+    form = SupervisorForm
+    context_dict['form'] = form
+    context_dict['form_errors'] = form.errors
+
+    # get user info
+    user = request.user
+    context_dict['user'] = user
+
+    permission = request.session['permission'].lower()
+    usertype = getuserobject(request)
+    context_dict[permission] = usertype
+
+    # HTTP POST?
+    if request.method == 'POST':
+        form = ProjectForm(request.POST)
+        # Have we been provided with a valid form?
+        if form.is_valid():
+            # Save to database
+            form.save(commit=True)
+            # Redirect to dashboard
+            return dashboard(request, user.username)
+
+    return render(request, 'omp/add_generic.html', context=context_dict)
+
+
+@login_required(login_url="/omp/login/")
+def add_admin(request):
+    context_dict = {}
+    form = AdminForm
+    context_dict['form'] = form
+    context_dict['form_errors'] = form.errors
+
+    # get user info
+    user = request.user
+    context_dict['user'] = user
+
+    permission = request.session['permission'].lower()
+    usertype = getuserobject(request)
+    context_dict[permission] = usertype
+
+    # HTTP POST?
+    if request.method == 'POST':
+        form = ProjectForm(request.POST)
+        # Have we been provided with a valid form?
+        if form.is_valid():
+            # Save to database
+            form.save(commit=True)
+            # Redirect to dashboard
+            return dashboard(request, user.username)
+
+    return render(request, 'omp/add_generic.html', context=context_dict)
+
+
+@login_required(login_url="/omp/login/")
+def add_preference(request):
+    context_dict = {}
+    form = PreferenceForm
+    context_dict['form'] = form
+    context_dict['form_errors'] = form.errors
+
+    # get user info
+    user = request.user
+    context_dict['user'] = user
+
+    permission = request.session['permission'].lower()
+    usertype = getuserobject(request)
+    context_dict[permission] = usertype
+
+    # HTTP POST?
+    if request.method == 'POST':
+        form = ProjectForm(request.POST)
+        # Have we been provided with a valid form?
+        if form.is_valid():
+            # Save to database
+            form.save(commit=True)
+            # Redirect to dashboard
+            return dashboard(request, user.username)
+
+    return render(request, 'omp/add_generic.html', context=context_dict)
 
 
 @login_required(login_url="/omp/login/")

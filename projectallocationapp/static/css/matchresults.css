@@ -46,28 +46,8 @@
     color: white;
 }
 
-#rightinfo {
-    width: 50%;
-    float: left;
-    margin: 10px;
-    border: 2px;
-    padding-left:10px;
-    font-family: 'Helvetica', sans-serif;
-}
-
-
 .header{
     text-align:center;
-}
-
-input[type=submit] {
-    background-color: #003964;
-    border: none;
-    color: white;
-    padding: 3px 10px;
-    text-decoration: none;
-    margin: 4px 2px;
-    cursor: pointer;
 }
 
 h1{
@@ -98,5 +78,3 @@ td, th {
 tr:nth-child(even) {
     background-color: #dddddd;
 }
-
-

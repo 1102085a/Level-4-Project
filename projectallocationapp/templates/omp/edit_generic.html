@@ -7,7 +7,7 @@
 {% block title %} OMP Dashboard {% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" type="text/css" href="{% static 'css/admindash.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'css/adminedit.css' %}" />
 {% endblock %}
 
 {% block navbar %}
@@ -22,14 +22,11 @@
             <img id="profile" src="{% static 'images/profile-pictures.png' %}" alt="Profile Image"/>
             <p id="username">{{ user.username }}</p>
             <p>Permission: Administrator</p>
-            <p>Current Stage: {{ stage }}</p>
-            <form action="" method="post">{% csrf_token %}
-            <input type="Submit" value= "Previous" name="Previous"/><input type="Submit" value="Next" name="Next"/>
     </form>
         </div>
         <div class="editform">
-            <h2>Edit Category</h2>
-            <form id="project_form" method="post" action="">
+            <h2>Edit {{ itemname }}</h2>
+            <form id="item_form" method="post" action="">
                 {% csrf_token %}
                 {{ form.as_p }}
                 <input type="submit" name="submit" value="Save" />

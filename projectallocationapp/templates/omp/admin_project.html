@@ -11,19 +11,35 @@
 {% endblock %}
 
 {% block navbar %}
-<li id="navoptions" style="float:right;font-size:12px"><h2>Log Out</h2> <h2>Dashboard</h2></li>
+<li id="navoptions"><h2><a href="/omp/logout/">Log Out</a></h2></li>
+<li id="navoptions"><h2><a href="/omp/{{ user.username }}/dashboard">Dashboard</a></h2></li>
 {% endblock %}
 
- <h1 class="header" style="text-align:center">Project Categories</h1>
+{% block content %}
+
+    <div id = "container">
+            <div id ="leftinfo">
+                <img id="profile" src="{% static 'images/profile-pictures.png' %}" alt="Profile Image"/>
+                <p id="username">{{ user.username }}</p>
+                <p>Permission: Administrator</p>
+                <p>Current Stage: {{ stage }}</p>
+        </form>
+            </div>
+
+        <div id = "rightinfo">
+        <h1 class="header" style="text-align:center">Projects</h1>
             <Table class="center">
                 <tr>
                     <th>Project</th>
                     <th>Supervisor</th>
                 </tr>
-            {% for project in categories %}
+            {% for project in projects %}
                 <tr>
-                    <td>{{ project.name }}</td>
+                    <td><a href ="/omp/{{ user.username }}/admin/edit/pro/{{ project.slug }}/">{{ project.name }}</a></td>
                     <td>{{ project.supervisor.user.username }}</td>
                 </tr>
             {% endfor %}
             </Table>
+        </div>
+    </div>
+{% endblock %}

@@ -11,19 +11,41 @@
 {% endblock %}
 
 {% block navbar %}
-<li id="navoptions" style="float:right;font-size:12px"><h2>Log Out</h2> <h2>Dashboard</h2></li>
+<li id="navoptions"><h2><a href="/omp/logout/">Log Out</a></h2></li>
+<li id="navoptions"><h2><a href="/omp/{{ user.username }}/dashboard">Dashboard</a></h2></li>
 {% endblock %}
 
- <h1 class="header" style="text-align:center">Project Categories</h1>
-            <Table class="center">
-                <tr>
-                    <th>Student</th>
-                    <th>Category</th>
-                </tr>
-            {% for student in students %}
-                <tr>
-                    <td>{{ student.name }}</td>
-                    <td>{{ student.category.name }}</td>
-                </tr>
-            {% endfor %}
-            </Table>
+{% block content %}
+
+    <div id = "container">
+            <div id ="leftinfo">
+                <img id="profile" src="{% static 'images/profile-pictures.png' %}" alt="Profile Image"/>
+                <p id="username">{{ user.username }}</p>
+                <p>Permission: Administrator</p>
+                <p>Current Stage: {{ stage }}</p>
+        </form>
+            </div>
+        <div id = "rightinfo">
+        <h2 class="header" style="text-align:center">Project Categories</h2>
+                <Table class="center">
+                    <tr>
+                        <th>Student</th>
+                        <th></th>
+                    </tr>
+                {% for student in students %}
+                        <td>
+                            <a href="/omp/{{ user.username }}/admin/edit/stu/{{ student.user.username }}/">{{ student.user.username }}</a>
+                        </td>
+                        <td>
+                        <form method="post" action = "">{% csrf_token %}
+                            <input name="Delete" type="submit" value="Delete {{ student.id }}" />
+                        </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </Table>
+            {{ delete_message }}
+        </div>
+    </div>
+
+{% endblock %}

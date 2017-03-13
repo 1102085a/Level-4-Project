@@ -18,10 +18,12 @@ urlpatterns = [
     url(r'^create_preference/$', views.add_preference, name='add preference'),
     url(r'^(?P<username>[\w\-]+)/admin/supervisors/$', views.supervisor_list, name='supervisors'),
     url(r'^(?P<username>[\w\-]+)/admin/students/$', views.student_list, name='students'),
+    url(r'^(?P<username>[\w\-]+)/admin/administrators/$', views.admin_list, name='administrators'),
     url(r'^(?P<username>[\w\-]+)/admin/projects/$', views.project_list, name='projects'),
     url(r'^(?P<username>[\w\-]+)/admin/categories/$', views.category_list, name='categories'),
     url(r'^(?P<username>[\w\-]+)/admin/preferences/$', views.preference_list, name='preferences'),
-    url(r'^(?P<username>[\w\-]+)/admin/edit/(?P<category_name_slug>[\w\-]+)/$', views.edit_category, name='edit category'),
-    #url(r'^(?P<username>[\w\-]+)/admin/edit/(?P<project_name_slug>[\w\-]+)/$', views.edit_project, name='edit project'),
-    #url(r'^(?P<username>[\w\-]+)/admin/edit/(?P<student_name>[\w\-]+)/$', views.edit_student, name='edit student')
+    url(r'^(?P<username>[\w\-]+)/admin/edit/cat/(?P<category_name_slug>[\w\-]+)/$', views.edit_category, name='edit category'),
+    url(r'^(?P<username>[\w\-]+)/admin/edit/pro/(?P<project_name_slug>[\w\-]+)/$', views.edit_project, name='edit project'),
+    url(r'^(?P<username>[\w\-]+)/admin/edit/stu/(?P<student_name>[\w\-]+)/$', views.edit_student, name='edit student'),
+    url(r'^(?P<username>[\w\-]+)/admin/edit/sup/(?P<supervisor_name>[\w\-]+)/$', views.edit_supervisor, name='edit supervisor'),
 ]

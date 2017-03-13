@@ -7,7 +7,7 @@
 {% block title %} OMP - Add Model {% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" type="text/css" href="{% static 'css/addmodel.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'css/category.css' %}" />
 {% endblock %}
 
 {% block navbar %}
@@ -23,10 +23,8 @@
             <img id="profile" src="{% static 'images/profile-pictures.png' %}" alt="Profile Image"/>
             <p id="username">{{ user.username }}</p>
             <p>Permission: Administrator</p>
-            {% endif %}
         </div>
 
-        <div class="resultstable">
             <table class = "center">
                 <tr>
                     <th>Student</th>
@@ -34,13 +32,11 @@
                 </tr>
                     {% for key, value in processed.items %}
                     <tr>
-                        <td>{{key}}</td>
-                        <td>{{value}}</td>
+                        <td>{{ key }}</td>
+                        <td>{{ value }}</td>
                         {% endfor %}
                     </tr>
-                    {% endfor %}
             </table>
-        </div>
     </div>
 
 {% endblock %}

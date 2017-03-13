@@ -19,8 +19,9 @@ General algorithm outline:
 
 processlist = {}
 
+
 def greedyAssignment():
-    students_list = Student.objects.all()
+    students_list = list(Student.objects.all())
 
     # O(N) Random selection
     size = len(students_list)
@@ -29,26 +30,38 @@ def greedyAssignment():
         student = students_list[index]
         students_list[index] = students_list[size - 1]
         size -= 1
+        print("Processing " + student.user.username)
         process(student)
     return processlist
 
 
 def process(student):
-    studentprefs = PrefListEntry.objects.filter(Student)
+    studentprefs = PrefListEntry.objects.filter(student=student)
     if len(studentprefs) < 5:
         student.project = None
-    for pref in studentprefs:
-        project = pref.project
-        supervisor = project.supervisor
-        if project.assigned:
-            student.project = None
-        elif supervisor.capacity == supervisor.assigned:
-            student.project = None
-        else:
-            student.project = project
-            supervisor.assigned += 1
-            student.save()
-            supervisor.save()
-    processlist[student.user.username] = student.project.name
+        print("Less than five projects.")
+    else:
+        for pref in studentprefs:
+            project = pref.project
+            supervisor = project.supervisor
+            if project.assigned:
+                student.project = None
+                print("Project Already Assigned.")
+            elif supervisor.capacity == supervisor.assigned:
+                student.project = None
+                print("Supervisor at Capacity")
+            else:
+                student.project = project
+                supervisor.assigned += 1
+                student.save()
+                supervisor.save()
+                print("Project Assigned: " + project.name)
+                break
+
+    print("DONE.")
+    if student.project is None:
+        processlist[student.user.username] = None
+    else:
+        processlist[student.user.username] = student.project.name
 
 

@@ -1,26 +1,22 @@
-body{
-    font-family: 'Ubuntu', sans-serif;
-}
-
-ul
-{
-    list-style-type: none;
-}
-
 /* Navbar */
-
 #navoptions{
     float:right;
     font-size:12px;
-    padding-top: 33px;
-    padding-right:20px;
+    padding: 10px
 }
 
 #navoptions a:hover {
     background-color: #3f70bf;
 }
 
+/* Master Container */
+#container {
+    width: auto;
+    height: 100px;
+    clear:both;
+}
 
+/* Left panel*/
 #profile {
     align-items: center;
     padding-top: 10px;
@@ -30,17 +26,6 @@ ul
 #username {
     margin: 5px;
     text-align: left;
-}
-
-a {
-    text-decoration: none;
-
-}
-
-#container {
-    width: auto;
-    height: 100px;
-    clear:both;
 }
 
 #leftinfo {
@@ -53,26 +38,6 @@ a {
     font-family: 'Helvetica', sans-serif;
     color: white;
 }
-
-#rightinfo {
-    width: 200px;
-    height: 200px;
-    float: left;
-    margin: 10px;
-    border: 2px;
-    padding-left:10px;
-}
-
-input[type=submit] {
-    background-color: #003964;
-    border: none;
-    color: white;
-    padding: 3px 10px;
-    text-decoration: none;
-    margin: 4px 2px;
-    cursor: pointer;
-}
-
 
 /* Form Stylings */
 h2{
@@ -89,7 +54,7 @@ label {
     margin-right:5px;
 }
 
-.editform {
+.addform {
     display: block;
     margin: 20px;
     float: left;

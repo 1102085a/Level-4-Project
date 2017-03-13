@@ -31,7 +31,15 @@ html, body
     text-decoration: none;
 }
 
+#omp{
+    padding:10px;
+}
+
 p {
     font-family: 'Ubuntu', sans-serif;
     margin-left: 1px;
+}
+
+a {
+    text-decoration: none;
 }

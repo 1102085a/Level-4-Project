@@ -26,25 +26,21 @@
         </form>
             </div>
         <div id = "rightinfo">
-        <h2 class="header" style="text-align:center">Preference Lists</h2>
+        <h2 class="header" style="text-align:center">Project Categories</h2>
                 <Table class="center">
                     <tr>
-                        <th>Student</th>
-                        <th>Rank</th>
+                        <th>Admin</th>
                         <th></th>
                     </tr>
-                {% for pref in prefs %}
-                    <td>
-                        <a href="/omp/{{ user.username }}/admin/edit/pref/{{ pref.student.user.username }}/">{{ pref.student.user.username }}</a>
-                    </td>
-                    <td>
-                       {{ pref.rank }}
-                    </td>
-                    <td>
-                    <form method="post" action = "">{% csrf_token %}
-                        <input name="Delete" type="submit" value="Delete {{ pref.id }}" />
-                    </form>
-                    </td>
+                {% for admin in admins %}
+                        <td>
+                            <a href="/omp/{{ user.username }}/admin/edit/{{ admin.user.username }}/">{{ admin.user.username }}</a>
+                        </td>
+                        <td>
+                        <form method="post" action = "">{% csrf_token %}
+                            <input name="Delete" type="submit" value="Delete {{ admin.id }}" />
+                        </form>
+                        </td>
                     </tr>
                 {% endfor %}
                 </Table>

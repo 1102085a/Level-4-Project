@@ -24,10 +24,11 @@
             <p>Current Stage: {{ stage }}</p>
             <form action="" method="post">{% csrf_token %}
             <input type="Submit" value= "Previous" name="Previous"/><input type="Submit" value="Next" name="Next"/>
-            {{ if stage == 4 }}
+            {% if stage == 4 %}
                 <input type="Submit" value= "Match" name="Match"/>
-            {{ else }}
+            {% else %}
                 <input type="Submit" value= "Match" name="Match" disabled/>
+            {% endif %}
             </form>
         </div>
         <div id = "addoptions">
@@ -46,7 +47,7 @@
             <p><a href="/omp/{{ user.username }}/admin/students/">Edit Students</a></p>
             <p><a href="/omp/{{ user.username }}/admin/supervisors/">Edit Supervisors</a></p>
             <p><a href="/omp/{{ user.username }}/admin/projects/">Edit Projects</a></p>
-            <p><a href="/omp/{{ user.username }}/admin/prefs/">Edit Preference Lists</a></p>
+            <p><a href="/omp/{{ user.username }}/admin/preferences/">Edit Preference Lists</a></p>
     </div>
 
 </div>

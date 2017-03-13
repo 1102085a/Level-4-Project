@@ -1,11 +1,7 @@
-body{
-    font-family: 'Ubuntu', sans-serif;
-}
-
-
-ul
-{
-    list-style-type: none;
+.center {
+    margin: auto;
+    width: 60%;
+    padding: 10px;
 }
 
 /* Navbar */
@@ -13,14 +9,21 @@ ul
 #navoptions{
     float:right;
     font-size:12px;
-    padding: 0px
+    padding: 10px
 }
 
 #navoptions a:hover {
     background-color: #3f70bf;
 }
 
+/* Master Container */
+#container {
+    width: auto;
+    height: 100px;
+    clear:both;
+}
 
+/* Left panel*/
 #profile {
     align-items: center;
     padding-top: 10px;
@@ -30,12 +33,6 @@ ul
 #username {
     margin: 5px;
     text-align: left;
-}
-
-#container {
-    width: auto;
-    height: 100px;
-    clear:both;
 }
 
 #leftinfo {
@@ -50,28 +47,35 @@ ul
 }
 
 #rightinfo {
-    width: 200px;
-    height: 200px;
+    width: 30%;
     float: left;
     margin: 10px;
     border: 2px;
     padding-left:10px;
+    font-family: 'Helvetica', sans-serif;
+}
+
+.header{
+    text-align:center;
+}
+
+h1{
+    font-family: 'Ubuntu', sans-serif;
+    margin: 0px;
+    padding: 10px;
 }
 
 #preftable{
-    width: 200px;
-    height: 200px;
-    margin: 10px;
-    border: 2px;
+    width: 600px;
+    padding-top: 10px;
     float: left;
 }
-
-/* Table Stylings */
 
 table {
     font-family: calibri, sans-serif;
     border-collapse: collapse;
-    width: 200%;
+    width: 70%;
+    align: center;
 }
 
 th {
@@ -90,8 +94,6 @@ tr:nth-child(even) {
     background-color: #dddddd;
 }
 
-/* Button Stylings */
-
 input[type=submit] {
     background-color: #003964;
     border: none;
@@ -101,9 +103,3 @@ input[type=submit] {
     margin: 4px 2px;
     cursor: pointer;
 }
-
-input[type=submit]:hover {
-    background-color: #98bbe2;
-    color: black;
-}
-

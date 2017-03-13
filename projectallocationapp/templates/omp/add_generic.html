@@ -23,7 +23,7 @@
         </div>
 
         <div class="addform">
-            <h2>New Project</h2>
+            <h2>New {{ itemname }}</h2>
             <form id="model_form" method="post" action="">
                 {% csrf_token %}
                 {{ form.as_p }}

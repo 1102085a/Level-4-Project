@@ -37,26 +37,22 @@ def greedyAssignment():
 
 def process(student):
     studentprefs = PrefListEntry.objects.filter(student=student)
-    if len(studentprefs) < 5:
-        student.project = None
-        print("Less than five projects.")
-    else:
-        for pref in studentprefs:
-            project = pref.project
-            supervisor = project.supervisor
-            if project.assigned:
-                student.project = None
-                print("Project Already Assigned.")
-            elif supervisor.capacity == supervisor.assigned:
-                student.project = None
-                print("Supervisor at Capacity")
-            else:
-                student.project = project
-                supervisor.assigned += 1
-                student.save()
-                supervisor.save()
-                print("Project Assigned: " + project.name)
-                break
+    for pref in studentprefs:
+        project = pref.project
+        supervisor = project.supervisor
+        if project.assigned:
+            student.project = None
+            print("Project Already Assigned.")
+        elif supervisor.capacity == supervisor.assigned:
+            student.project = None
+            print("Supervisor at Capacity")
+        else:
+            student.project = project
+            supervisor.assigned += 1
+            student.save()
+            supervisor.save()
+            print("Project Assigned: " + project.name)
+            break
 
     print("DONE.")
     if student.project is None:

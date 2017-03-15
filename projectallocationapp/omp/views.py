@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, render_to_response
+from django.http import HttpResponseForbidden
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import get_object_or_404, redirect
@@ -267,6 +268,9 @@ def checkSupervisors(prefList, proj):
 
 @login_required(login_url="/omp/login/")
 def add_category(request):
+    # kick users with insufficient permissions
+    if request.session["permission"] != "Administrator":
+        return HttpResponseForbidden()
     context_dict = {}
     form = CategoryForm
     context_dict['form'] = form
@@ -285,7 +289,7 @@ def add_category(request):
             # Save the new category to the database.
             form.save(commit=True)
             # Redirect to dashboard after adding category
-            return dashboard(request)
+            return HttpResponseForbidden()
 
     # Will handle the bad form, new form, or no form supplied cases.
     # Render the form with error messages (if any).
@@ -294,6 +298,10 @@ def add_category(request):
 
 @login_required(login_url="/omp/login/")
 def add_project(request):
+    # kick users with insufficient permissions
+    if request.session["permission"] == "Student":
+        return HttpResponseForbidden()
+
     context_dict = {}
 
     # get user info
@@ -328,6 +336,10 @@ def add_project(request):
 
 @login_required(login_url="/omp/login/")
 def add_student(request):
+    # kick users with insufficient permissions
+    if request.session["permission"] != "Administrator":
+        return HttpResponseForbidden()
+
     context_dict = {}
     form = StudentForm
     context_dict['form'] = form
@@ -357,6 +369,10 @@ def add_student(request):
 
 @login_required(login_url="/omp/login/")
 def add_supervisor(request):
+    # kick users with insufficient permissions
+    if request.session["permission"] != "Administrator":
+        return HttpResponseForbidden()
+
     context_dict = {}
     form = SupervisorForm
     context_dict['form'] = form
@@ -386,6 +402,10 @@ def add_supervisor(request):
 
 @login_required(login_url="/omp/login/")
 def add_admin(request):
+    # kick users with insufficient permissions
+    if request.session["permission"] != "Administrator":
+        return HttpResponseForbidden()
+
     context_dict = {}
     form = AdminForm
     context_dict['form'] = form
@@ -415,6 +435,10 @@ def add_admin(request):
 
 @login_required(login_url="/omp/login/")
 def add_preference(request):
+    # kick users with insufficient permissions
+    if request.session["permission"] != "Administrator":
+        return HttpResponseForbidden()
+
     context_dict = {}
     form = PreferenceForm
     context_dict['form'] = form
@@ -444,6 +468,9 @@ def add_preference(request):
 
 @login_required(login_url="/omp/login/")
 def supervisor_list(request, username):
+    # kick users with insufficient permissions
+    if request.session["permission"] != "Administrator":
+        return HttpResponseForbidden()
 
     context_dict = {}
     sc = SiteConfiguration.objects.get()
@@ -455,6 +482,9 @@ def supervisor_list(request, username):
 
 @login_required(login_url="/omp/login/")
 def student_list(request, username):
+    # kick users with insufficient permissions
+    if request.session["permission"] != "Administrator":
+        return HttpResponseForbidden()
 
     context_dict = {}
     sc = SiteConfiguration.objects.get()
@@ -466,6 +496,9 @@ def student_list(request, username):
 
 @login_required(login_url="/omp/login/")
 def admin_list(request, username):
+    # kick users with insufficient permissions
+    if request.session["permission"] != "Administrator":
+        return HttpResponseForbidden()
 
     context_dict = {}
     sc = SiteConfiguration.objects.get()
@@ -477,6 +510,9 @@ def admin_list(request, username):
 
 @login_required(login_url="/omp/login/")
 def project_list(request, username):
+    # kick users with insufficient permissions
+    if request.session["permission"] != "Administrator":
+        return HttpResponseForbidden()
 
     context_dict = {}
     sc = SiteConfiguration.objects.get()
@@ -488,6 +524,9 @@ def project_list(request, username):
 
 @login_required(login_url="/omp/login/")
 def category_list(request, username):
+    # kick users with insufficient permissions
+    if request.session["permission"] != "Administrator":
+        return HttpResponseForbidden()
 
     context_dict = {}
     context_dict['delete_message'] = ""
@@ -508,6 +547,9 @@ def category_list(request, username):
 
 @login_required(login_url="/omp/login/")
 def preference_list(request, username):
+    # kick users with insufficient permissions
+    if request.session["permission"] != "Administrator":
+        return HttpResponseForbidden()
 
     context_dict = {}
     sc = SiteConfiguration.objects.get()
@@ -519,6 +561,10 @@ def preference_list(request, username):
 
 @login_required(login_url="/omp/login/")
 def edit_category(request, category_name_slug, username):
+    # kick users with insufficient permissions
+    if request.session["permission"] != "Administrator":
+        return HttpResponseForbidden()
+
     context_dict = {}
     context_dict['confirm_message'] = ""
     context_dict['itemname'] = "Category"
@@ -555,6 +601,10 @@ def edit_category(request, category_name_slug, username):
 
 @login_required(login_url="/omp/login/")
 def edit_project(request, project_name_slug, username):
+    # kick users with insufficient permissions
+    if request.session["permission"] != "Administrator":
+        return HttpResponseForbidden()
+
     context_dict = {}
     context_dict['itemname'] = "Project"
 
@@ -589,6 +639,10 @@ def edit_project(request, project_name_slug, username):
 
 @login_required(login_url="/omp/login/")
 def edit_student(request, student_name, username):
+    # kick users with insufficient permissions
+    if request.session["permission"] != "Administrator":
+        return HttpResponseForbidden()
+
     context_dict = {}
     context_dict['itemname'] = "Student"
 
@@ -623,6 +677,10 @@ def edit_student(request, student_name, username):
 
 @login_required(login_url="/omp/login/")
 def edit_supervisor(request, supervisor_name, username):
+    # kick users with insufficient permissions
+    if request.session["permission"] != "Administrator":
+        return HttpResponseForbidden()
+
     context_dict = {}
     context_dict['itemname'] = "Supervisor"
 
@@ -656,6 +714,10 @@ def edit_supervisor(request, supervisor_name, username):
 
 @login_required(login_url="/omp/login/")
 def edit_administrator(request, admin_name, username):
+    # kick users with insufficient permissions
+    if request.session["permission"] != "Administrator":
+        return HttpResponseForbidden()
+
     context_dict = {}
     context_dict['itemname'] = "Administrator"
 
@@ -688,6 +750,10 @@ def edit_administrator(request, admin_name, username):
 
 @login_required(login_url="/omp/login/")
 def edit_preflist(request, preflist_name, username):
+    # kick users with insufficient permissions
+    if request.session["permission"] != "Administrator":
+        return HttpResponseForbidden()
+
     context_dict = {}
     context_dict['itemname'] = "Preference List"
 

@@ -30,17 +30,26 @@ def user_login(request):
         if user:  # user exists
             login(request, user)
             if usertype == "Student":
-                student = Student.objects.get(user=user)
-                if student is not None:
+                try:
+                    student = Student.objects.get(user=user)
                     request.session['permission'] = "Student"
+                except Student.DoesNotExist:
+                    error_message = "You don't have this permission."
+                    return render(request, 'omp/login.html', {'login_message': error_message})
             elif usertype == "Supervisor":
-                supervisor = Supervisor.objects.get(user=user)
-                if supervisor is not None:
+                try:
+                    supervisor = Supervisor.objects.get(user=user)
                     request.session['permission'] = "Supervisor"
+                except Supervisor.DoesNotExist:
+                    error_message = "You don't have this permission."
+                    return render(request, 'omp/login.html', {'login_message': error_message})
             elif usertype == "Administrator":
-                admin = Administrator.objects.get(user=user)
-                if admin is not None:
+                try:
+                    admin = Administrator.objects.get(user=user)
                     request.session['permission'] = "Administrator"
+                except Administrator.DoesNotExist:
+                    error_message = "You don't have this permission."
+                    return render(request, 'omp/login.html', {'login_message': error_message})
 
             urlresponse = '/omp/' + username + '/dashboard/'
             return HttpResponseRedirect(urlresponse)

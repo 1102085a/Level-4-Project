@@ -32,12 +32,16 @@
         </div>
 
         <div class="addform">
+            {% if stage != 2 %}
+            <p>You cannot submit any more projects at this time!</p>
+            {% else %}
             <h2>New Project</h2>
             <form id="project_form" method="post" action="">
                 {% csrf_token %}
                 {{ form.as_p }}
                 <input type="submit" name="submit" value="Create Project" />
             </form>
+            {% endif %}
         </div>
     </div>
 

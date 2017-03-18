@@ -324,11 +324,13 @@ def add_project(request):
         form = ProjectForm(initial={'supervisor': usertype})
         category_list = usertype.category.all()
         context_dict['categories'] = category_list
+        context_dict['supervisor'] = usertype
     else:
         form = ProjectForm
     context_dict['form'] = form
     context_dict['form_errors'] = form.errors
     context_dict['itemname'] = "Project"
+    context_dict['admin'] = usertype
     
     # HTTP POST?
     if request.method == 'POST':

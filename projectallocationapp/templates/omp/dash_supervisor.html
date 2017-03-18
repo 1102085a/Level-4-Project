@@ -28,7 +28,11 @@
         </div>
         <div id = "rightinfo">
             <p>Options</p>
+            {% if stage != 2 %}
+            <p>Add new project [LOCKED]</p>
+            {% else %}
             <a href = "/omp/create_project">Add new project</a>
+            {% endif %}
             <br>
             <p>Assigned Students</p>
             {% if assigned %}

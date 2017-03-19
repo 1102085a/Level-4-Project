@@ -1,3 +1,4 @@
+import random
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, render_to_response
 from django.http import HttpResponseForbidden
@@ -794,6 +795,4 @@ def edit_preflist(request, preflist_name, username):
             return redirect('omp.views.preference_list', username)
 
     return render(request, 'omp/edit_generic.html', context=context_dict)
-
-
 

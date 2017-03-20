@@ -22,7 +22,7 @@
             <img id="profile" src="{% static 'images/profile-pictures.png' %}" alt="Profile Image"/>
             <p id="username">{{ user.username }}</p>
             <p>Permission: Student</p>
-            {% if student.project.name = "Dummy project" %}
+            {% if student.project.name == "Dummy project" %}
                 <p>Project: None Assigned</p>
             {% else %}
                 <p>Project: {{ student.project.name }}</p>

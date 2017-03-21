@@ -13,7 +13,7 @@ General algorithm outline:
     Select students randomly
     Assign project to first in list
     If taken, give second, third, etc
-        - Any students without five preferences thrown out
+    - Check if the project supervisor is at their limit for assigned students
 
 '''
 
